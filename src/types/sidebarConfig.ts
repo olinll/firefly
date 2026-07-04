@@ -10,6 +10,7 @@ export type WidgetComponentType =
 	| "calendar"
 	| "music"
 	| "siteInfo"
+	| "githubHeatmap"
 	| "timeGreeting";
 
 export type WidgetComponentConfig = {
