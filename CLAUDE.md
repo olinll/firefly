@@ -65,7 +65,23 @@ Defined in `src/content.config.ts`:
 
 - **Biome** enforces: tab indentation, double quotes, recommended lint rules
 - Relaxed rules for `.svelte`/`.astro` files (useConst off, noUnusedVariables off)
-- Commit convention: **Conventional Commits** (`feat:`, `fix:`, `chore:`, etc.)
+
+## Commit Convention
+
+**Conventional Commits** in Chinese. Format:
+
+```
+type: 简短中文描述
+
+- 要点一
+- 要点二
+```
+
+Rules:
+- Type: `feat:` / `fix:` / `chore:` / `docs:` / `refactor:` — imperative, lowercase
+- Subject: Chinese, concise, no trailing period
+- Body: bullet list (`- `) with key changes, one-line each
+- **Do NOT** add `Co-Authored-By` or any sign-off trailer
 
 ## Build Pipeline
 
