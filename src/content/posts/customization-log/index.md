@@ -1,7 +1,7 @@
 ---
 title: 主题魔改日志
-published: 2026-07-04
-updated: 2026-07-04
+published: 2026-07-04 00:00:00
+updated: 2026-07-04 17:30:00
 description: 本博客基于 Firefly 主题的二次开发记录，汇总所有自定义改动及其实现方式，方便后续维护与迁移。
 tags: [二开, Firefly]
 category: 二开记录
@@ -81,3 +81,13 @@ flowchart TD
 - **布局优化** — 版权信息、RSS/Sitemap、Powered by 分行排列
 
 涉及文件：`Footer.astro`（重构）、`footerConfig.ts`（新增 `icp`、`policeRecord`、`status` 字段）、`footerConfig.ts` 类型（扩展类型定义）。
+
+## 短链接/重定向配置（2026-07-04）
+
+新增 `redirectsConfig` 配置系统，支持定义短路径到目标地址的映射，由 Astro 内置 redirects 功能生成静态跳转页面。
+
+- **内部跳转** — 如 `/link` → `/friends/`，访问短路径自动 301 跳转到站内页面
+- **外部跳转** — 如 `/avatar-qlogo` → QQ 头像 API，直接跳转到外部 URL
+- **配置模式** — 纯 `Record<string, string>` 映射表，添加到 `redirectsConfig` 对象即自动生效
+
+涉及文件：`redirectsConfig.ts`（新增）、`redirectsConfig.ts` 类型（新增）、`index.ts`（barrel 导出）、`types/config.ts`（类型导出）、`astro.config.mjs`（接入 `redirects` 配置）。
