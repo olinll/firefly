@@ -58,16 +58,16 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 是否在文章详情页显示
 			showOnPostPage: true,
 		},
-		{
-			// 组件类型：音乐播放器
-			type: "music",
-			// 是否启用该组件
-			enable: true,
-			// 组件位置
-			position: "sticky",
-			// 是否在文章详情页显示
-			showOnPostPage: true,
-		},
+		// {
+		// 	// 组件类型：音乐播放器
+		// 	type: "music",
+		// 	// 是否启用该组件
+		// 	enable: true,
+		// 	// 组件位置
+		// 	position: "sticky",
+		// 	// 是否在文章详情页显示
+		// 	showOnPostPage: true,
+		// },
 		{
 			// 组件类型：分类组件
 			type: "categories",
@@ -237,14 +237,14 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 是否在文章详情页显示
 			showOnPostPage: true,
 		},
-		{
-			// 组件类型：音乐播放器
-			type: "music",
-			// 是否启用该组件
-			enable: true,
-			// 是否在文章详情页显示
-			showOnPostPage: true,
-		},
+		// {
+		// 	// 组件类型：音乐播放器
+		// 	type: "music",
+		// 	// 是否启用该组件
+		// 	enable: true,
+		// 	// 是否在文章详情页显示
+		// 	showOnPostPage: true,
+		// },
 		{
 			// 组件类型：分类组件
 			type: "categories",
