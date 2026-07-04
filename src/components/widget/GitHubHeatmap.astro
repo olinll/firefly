@@ -91,9 +91,10 @@ async function getCalendarData(username: string): Promise<CalendarData> {
 				date,
 				count: data.count,
 				level: data.level,
-				tooltip: data.count > 0
-					? `${formatTooltipDate(date)} · ${data.count} 次提交`
-					: `${formatTooltipDate(date)} · 无提交`,
+				tooltip:
+					data.count > 0
+						? `${formatTooltipDate(date)} · ${data.count} 次提交`
+						: `${formatTooltipDate(date)} · 无提交`,
 			});
 		}
 
