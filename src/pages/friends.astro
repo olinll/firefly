@@ -4,6 +4,7 @@ import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
 import {
+	analyticsConfig,
 	commentConfig,
 	friendsPageConfig,
 	getEnabledFriends,
@@ -40,6 +41,14 @@ const allTags = [...new Set(items.flatMap((item) => item.tags || []))].sort();
 const title = friendsPageConfig.title || i18n(I18nKey.friends);
 const description =
 	friendsPageConfig.description || i18n(I18nKey.friendsDescription);
+
+// Umami 浏览量配置
+const umamiCfg = analyticsConfig.umamiAnalytics;
+const showUmamiViews = !!umamiCfg?.shareId;
+const umamiShareId = umamiCfg?.shareId || "";
+const umamiApiBase =
+	umamiCfg?.shareApiBase ||
+	(umamiCfg?.scriptUrl ? new URL(umamiCfg.scriptUrl).origin : "");
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -58,6 +67,20 @@ const description =
           <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
             {title}
           </div>
+          {
+            showUmamiViews && (
+              <div
+                class="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/50 text-xs transition"
+                data-umami-pv-path="/friends/"
+                data-umami-share-id={umamiShareId}
+                data-umami-api-base={umamiApiBase}
+              >
+                <Icon is:inline name="material-symbols:visibility-outline-rounded" class="text-(--primary) text-base" />
+                <span class="font-bold text-neutral-900 dark:text-neutral-100 whitespace-nowrap" data-umami-pv-value>—</span>
+                <span class="text-neutral-500 dark:text-neutral-400 whitespace-nowrap">{i18n(I18nKey.pageViews)}</span>
+              </div>
+            )
+          }
         </div>
         {
           description && (
@@ -294,4 +317,101 @@ const description =
       gap: 0.75rem;
     }
   </style>
+
+  <script>
+    // Umami 浏览量 - 友链页面
+    const SHARE_CACHE_KEY = "umami-profile-share";
+    const SHARE_CACHE_TTL = 24 * 60 * 60 * 1000;
+    const METRICS_CACHE_KEY = "umami-pv-metrics";
+    const METRICS_CACHE_TTL = 5 * 60 * 1000;
+
+    type ShareResponse = { token: string; websiteId: string };
+    type MetricRow = { x: string; y: number };
+
+    function readCache<T>(key: string, ttl: number, tag: string): T | null {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.tag === tag && Date.now() - parsed.timestamp < ttl) {
+          return parsed.value as T;
+        }
+      } catch {}
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    function writeCache(key: string, tag: string, value: unknown) {
+      try {
+        localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), tag, value }));
+      } catch {}
+    }
+
+    async function getShare(apiBase: string, shareId: string): Promise<ShareResponse> {
+      const cached = readCache<ShareResponse>(SHARE_CACHE_KEY, SHARE_CACHE_TTL, shareId);
+      if (cached) return cached;
+      const resp = await fetch(`${apiBase}/api/share/${shareId}`);
+      if (!resp.ok) throw new Error(`share ${resp.status}`);
+      const data = (await resp.json()) as ShareResponse;
+      writeCache(SHARE_CACHE_KEY, shareId, data);
+      return data;
+    }
+
+    async function getMetrics(apiBase: string, share: ShareResponse): Promise<MetricRow[]> {
+      const cached = readCache<MetricRow[]>(METRICS_CACHE_KEY, METRICS_CACHE_TTL, share.websiteId);
+      if (cached) return cached;
+      const url = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
+      const resp = await fetch(url, {
+        headers: { "x-umami-share-token": share.token, "x-umami-share-context": "1" },
+      });
+      if (!resp.ok) throw new Error(`metrics ${resp.status}`);
+      const data = (await resp.json()) as MetricRow[];
+      writeCache(METRICS_CACHE_KEY, share.websiteId, data);
+      return data;
+    }
+
+    function normalize(p: string): string {
+      return p.replace(/\/+$/, "").toLowerCase();
+    }
+
+    async function fillPageView() {
+      const nodes = document.querySelectorAll<HTMLElement>("[data-umami-pv-path]");
+      if (nodes.length === 0) return;
+
+      const first = nodes[0];
+      const shareId = first.dataset.umamiShareId;
+      const apiBase = (first.dataset.umamiApiBase || "").replace(/\/$/, "");
+      if (!shareId || !apiBase) return;
+
+      try {
+        const share = await getShare(apiBase, shareId);
+        const metrics = await getMetrics(apiBase, share);
+        const lookup = new Map<string, number>();
+        for (const r of metrics) {
+          const key = normalize(r.x);
+          lookup.set(key, (lookup.get(key) || 0) + (r.y || 0));
+        }
+
+        nodes.forEach((node) => {
+          const value = node.querySelector<HTMLElement>("[data-umami-pv-value]");
+          if (!value) return;
+          const path = normalize(node.dataset.umamiPvPath || "");
+          const count = lookup.get(path) ?? 0;
+          value.textContent = count.toLocaleString("en-US");
+        });
+      } catch {
+        nodes.forEach((node) => {
+          const value = node.querySelector<HTMLElement>("[data-umami-pv-value]");
+          if (value) value.textContent = "—";
+        });
+      }
+    }
+
+    function run() {
+      requestAnimationFrame(() => fillPageView());
+    }
+    run();
+    document.addEventListener("swup:contentReplaced", run);
+    document.addEventListener("astro:page-load", run);
+  </script>
 </MainGridLayout>
