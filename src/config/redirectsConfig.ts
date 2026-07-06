@@ -14,7 +14,7 @@ import type { RedirectsConfig } from "../types/redirectsConfig";
  */
 export const redirectsConfig: RedirectsConfig = {
 	// 示例 - 按需添加：
-	"/q":"/posts/qq-group/",
+	"/q": "/posts/qq-group/",
 	"/link": "/friends/",
 	"/avatar-qlogo": "https://q2.qlogo.cn/headimg_dl?dst_uin=9892214&spec=0",
 };

@@ -163,6 +163,26 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+
+	{
+		title: "十三",
+		imgurl: "https://blog.nw177.cn/assets/avatar.webp",
+		desc: "欲买桂花同载酒，终不似，少年游。",
+		siteurl: "https://blog.nw177.cn/",
+		tags: ["Astro"],
+		weight: 5,
+		enabled: true,
+	},
+
+	{
+		title: "灵光一刻|SUPERSTAR",
+		imgurl: "https://wuliqun.cn/star.png",
+		desc: "只为了记录每个时刻的想法",
+		siteurl: "https://wuliqun.cn/",
+		tags: ["Vue"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
