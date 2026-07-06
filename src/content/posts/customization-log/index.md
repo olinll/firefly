@@ -1,11 +1,14 @@
 ---
 title: 主题魔改日志
+slug: customization-log
 published: 2026-07-04 00:00:00
 updated: 2026-07-04 17:30:00
 description: 本博客基于 Firefly 主题的二次开发记录，汇总所有自定义改动及其实现方式，方便后续维护与迁移。
+image: api
+category: 技术
 tags: [二开, Firefly]
-category: 二开记录
 draft: false
+# pinned: false                                  # 置顶
 ---
 
 ## 接入 Umami 浏览量统计（2026-07-04）

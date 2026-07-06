@@ -1,10 +1,10 @@
----
+﻿---
 title: 使用CloudFlare优选任何网站！
 slug: cf-fastip
 published: 2026-06-13 19:54:38
 updated: 2026-06-21 16:57:55
 description: 通过 Worker 反代为网站做 IP 分流优选，提高国内访问速度与可用性
-image: './images/0001.webp'
+image: ./images/0001.webp
 category: 技术
 tags: [CloudFlare]
 draft: false
