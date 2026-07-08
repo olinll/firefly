@@ -156,9 +156,9 @@ export const friendsConfig: FriendLink[] = [
 
 	{
 		title: "miuo’s blog",
-		imgurl: "https://blog.miuo.me/avatar.avif",
+		imgurl: "https://miuo.me/avatar.avif",
 		desc: "记录文章、笔记、实验和暂时不想丢掉的内容。",
-		siteurl: "https://blog.miuo.me/",
+		siteurl: "https://miuo.me/",
 		tags: ["Astro"],
 		weight: 5,
 		enabled: true,
