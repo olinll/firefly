@@ -74,7 +74,7 @@ export const friendsConfig: FriendLink[] = [
 		imgurl:
 			"https://ts1.tc.mm.bing.net/th/id/OIP-C.6WsD9caLSNQFhJOi77soRAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
 		desc: "TT清沫ukの博客",
-		siteurl: "https://ttquk.netlify.app/",
+		siteurl: "https://ttquk.github.io/",
 		tags: ["Hexo"],
 		weight: 5,
 		enabled: true,
