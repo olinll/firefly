@@ -183,6 +183,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+	{
+		title: "MineAPK",
+		imgurl: "https://mcae.cn/uploads/MineAPKlogo.png",
+		desc: "目前是一个我的世界版本库",
+		siteurl: "https://mcae.cn/",
+		tags: ["HTML"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
