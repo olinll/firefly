@@ -315,6 +315,12 @@ content:
         format: code
         description: 代码高亮主题、折叠插件、语言徽章等代码块配置
 
+      - name: redirects-config
+        label: 📝 重定向映射
+        type: file
+        path: src/config/redirectsConfig.ts
+        format: code
+        description: 重定向映射配置
   # ============================================================
   # 🔧 功能配置
   # ============================================================
