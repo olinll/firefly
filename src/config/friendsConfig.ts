@@ -74,7 +74,7 @@ export const friendsConfig: FriendLink[] = [
 		imgurl:
 			"https://ts1.tc.mm.bing.net/th/id/OIP-C.6WsD9caLSNQFhJOi77soRAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
 		desc: "TT清沫ukの博客",
-		siteurl: "https://ttquk.netlify.app/",
+		siteurl: "https://ttquk.github.io/",
 		tags: ["Hexo"],
 		weight: 5,
 		enabled: true,
@@ -156,9 +156,9 @@ export const friendsConfig: FriendLink[] = [
 
 	{
 		title: "miuo’s blog",
-		imgurl: "https://blog.miuo.me/avatar.avif",
+		imgurl: "https://miuo.me/avatar.avif",
 		desc: "记录文章、笔记、实验和暂时不想丢掉的内容。",
-		siteurl: "https://blog.miuo.me/",
+		siteurl: "https://miuo.me/",
 		tags: ["Astro"],
 		weight: 5,
 		enabled: true,
@@ -180,6 +180,15 @@ export const friendsConfig: FriendLink[] = [
 		desc: "只为了记录每个时刻的想法",
 		siteurl: "https://wuliqun.cn/",
 		tags: ["Vue"],
+		weight: 5,
+		enabled: true,
+	},
+	{
+		title: "MineAPK",
+		imgurl: "https://mcae.cn/uploads/MineAPKlogo.png",
+		desc: "目前是一个我的世界版本库",
+		siteurl: "https://mcae.cn/",
+		tags: ["HTML"],
 		weight: 5,
 		enabled: true,
 	},
