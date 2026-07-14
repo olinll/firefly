@@ -201,6 +201,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+		{
+		title: "Zorro‘s Blog",
+		imgurl: "https://blog.zuodev.top/file/picture/UserPicture.png",
+		desc: "记录生活、分享技术",
+		siteurl: "https://blog.zuodev.top/",
+		tags: ["Vue"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
