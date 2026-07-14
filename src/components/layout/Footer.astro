@@ -19,7 +19,10 @@ if (footerConfig.enable) {
 		customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
 		customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
 	} catch (error: unknown) {
-		console.warn("FooterConfig.html文件读取失败:", error instanceof Error ? error.message : String(error));
+		console.warn(
+			"FooterConfig.html文件读取失败:",
+			error instanceof Error ? error.message : String(error),
+		);
 	}
 }
 
