@@ -9,6 +9,7 @@ declare global {
 	interface ITOCManager {
 		init: () => void;
 		cleanup: () => void;
+		attach: () => void;
 	}
 
 	interface Window {
