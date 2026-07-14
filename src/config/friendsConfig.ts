@@ -201,7 +201,7 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
-		{
+	{
 		title: "Zorro‘s Blog",
 		imgurl: "https://blog.zuodev.top/file/picture/UserPicture.png",
 		desc: "记录生活、分享技术",
