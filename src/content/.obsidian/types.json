@@ -4,6 +4,7 @@
     "cssclasses": "multitext",
     "tags": "tags",
     "date": "date",
-    "category": "text"
+    "category": "text",
+    "comment": "datetime"
   }
 }

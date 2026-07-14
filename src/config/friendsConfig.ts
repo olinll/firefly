@@ -192,6 +192,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+	{
+		title: "笔尖代码",
+		imgurl: "https://123456l.com/assets/images/logo.png",
+		desc: "笔尖代码 - 一份汇聚前端、后端、数据库、运维、系统知识的个人技术文档库",
+		siteurl: "https://123456l.com/",
+		tags: ["PHP"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
