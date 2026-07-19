@@ -212,7 +212,8 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "xane",
-		imgurl: "https://cloudflare-imgbed-d88.pages.dev/file/1784102742642_头像.jpg",
+		imgurl:
+			"https://cloudflare-imgbed-d88.pages.dev/file/1784102742642_头像.jpg",
 		desc: "Keep going.",
 		siteurl: "https://xane.eu.cc",
 		tags: ["Astro"],
@@ -239,9 +240,9 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "极客指北",
-		imgurl: "https://www.90svip.cn",
+		imgurl: "https://www.90svip.cn/logo.png",
 		desc: "探索科技之路，分享美好生活！",
-		siteurl: "https://www.90svip.cn/logo.png",
+		siteurl: "https://www.90svip.cn",
 		tags: ["PHP"],
 		weight: 5,
 		enabled: true,
