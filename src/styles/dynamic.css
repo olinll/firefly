@@ -182,11 +182,6 @@ dynamic-feed {
 	display: none;
 }
 
-.enable-card-border .dynamic-entry {
-	border: 0;
-	box-shadow: none;
-}
-
 .dynamic-entry-header {
 	display: flex;
 	align-items: center;
@@ -641,10 +636,13 @@ dynamic-feed {
 
 :root.dark .dynamic-page-header h2,
 :root.dark .dynamic-identity strong,
-:root.dark .dynamic-content,
+:root.dark .dynamic-content {
+	color: rgb(255 255 255 / 90%);
+}
+
 :root.dark .dynamic-search input,
 :root.dark .dynamic-year-select select {
-	background: var(--card-bg);
+	background: transparent;
 	color: rgb(255 255 255 / 90%);
 	color-scheme: dark;
 }
