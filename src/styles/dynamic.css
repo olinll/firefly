@@ -296,6 +296,31 @@ dynamic-feed {
 .dynamic-content blockquote,
 .dynamic-content pre {
 	margin-block: 0.75rem;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	background: color-mix(in srgb, var(--primary) 8%, transparent);
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+
+.dynamic-content code {
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 0.875em;
+}
+
+.dynamic-content pre code {
+	background: none;
+	padding: 0;
+	border-radius: 0;
+	font-size: inherit;
+}
+
+.dynamic-content :not(pre) > code {
+	padding: 0.125em 0.375em;
+	border-radius: 0.25rem;
+	background: color-mix(in srgb, var(--primary) 10%, transparent);
+	word-break: break-word;
 }
 
 .dynamic-gallery {
@@ -726,4 +751,62 @@ dynamic-feed {
 		height: 3.25rem;
 		flex-basis: 3.25rem;
 	}
+}
+
+.dynamic-powered-by {
+	display: inline-block;
+	margin-top: 0.15rem;
+	color: var(--content-meta);
+	font-size: 0.78rem;
+	text-decoration: none;
+	opacity: 0.55;
+	transition: opacity 0.2s, color 0.2s;
+}
+
+.dynamic-powered-by::before {
+	content: "— ";
+	opacity: 0.5;
+}
+
+.dynamic-powered-by:hover {
+	color: var(--primary);
+	opacity: 0.85;
+}
+
+.dynamic-header-end {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.4rem;
+	align-self: start;
+}
+
+.dynamic-pv-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.2rem 0.65rem;
+	border-radius: 0.5rem;
+	background: color-mix(in srgb, var(--primary) 8%, transparent);
+	font-size: 0.78rem;
+	line-height: 1.5;
+	white-space: nowrap;
+}
+
+.dynamic-pv-icon {
+	font-size: 1rem;
+	color: var(--primary);
+}
+
+.dynamic-pv-value {
+	font-weight: 600;
+	color: rgb(0 0 0 / 90%);
+}
+
+:root.dark .dynamic-pv-value {
+	color: rgb(255 255 255 / 90%);
+}
+
+.dynamic-pv-label {
+	color: var(--content-meta);
 }

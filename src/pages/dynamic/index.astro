@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components";
 import DynamicFeed from "@/components/pages/dynamic/DynamicFeed.svelte";
 import DynamicItemTemplate from "@/components/pages/dynamic/DynamicItemTemplate.astro";
-import { commentConfig, dynamicConfig, siteConfig } from "@/config";
+import { commentConfig, dynamicConfig, analyticsConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -24,7 +24,36 @@ const showInlineComments = Boolean(
 		commentConfig.type !== "none",
 );
 const dataUrl = url("/api/dynamic.json");
-const dynamicCount = (await getCollection("dynamic")).length;
+
+// Umami 浏览量配置
+const umamiCfg = analyticsConfig.umamiAnalytics;
+const showUmamiViews = !!umamiCfg?.shareId;
+const umamiShareId = umamiCfg?.shareId || "";
+const umamiApiBase =
+	umamiCfg?.shareApiBase ||
+	(umamiCfg?.scriptUrl ? new URL(umamiCfg.scriptUrl).origin : "");
+
+let dynamicCount = 0;
+if (dynamicConfig.memos?.serverUrl) {
+	try {
+		const svr = dynamicConfig.memos.serverUrl.replace(/\/+$/, "");
+		const tok = dynamicConfig.memos.accessToken;
+		const headers: Record<string, string> = {};
+		if (tok) headers["Authorization"] = `Bearer ${tok}`;
+		const r = await fetch(`${svr}/api/v1/memos?pageSize=1000`, { headers });
+		if (r.ok) {
+			const d = await r.json();
+			const tags = dynamicConfig.memos!.tags;
+			dynamicCount = (d.memos || []).filter(
+				(m: { visibility: string; tags?: string[] }) =>
+					(dynamicConfig.memos!.visibility !== "public" || m.visibility === "PUBLIC") &&
+					(!tags?.length || tags.some((t) => m.tags?.includes(t))),
+			).length;
+		}
+	} catch {}
+} else {
+	dynamicCount = (await getCollection("dynamic")).length;
+}
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -36,19 +65,50 @@ const dynamicCount = (await getCollection("dynamic")).length;
 						<Icon is:inline name="material-symbols:forum-rounded" />
 					</div>
 					<div>
-						<h2 id="dynamic-page-title">{title}</h2>
+							<div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+								<h2 id="dynamic-page-title">{title}</h2>
+							</div>
 						{description && <p>{description}</p>}
+						{dynamicConfig.memos?.serverUrl && (
+							<a
+								class="dynamic-powered-by"
+								href={dynamicConfig.memos.serverUrl.replace(/\/+$/, "")}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								由 Memos 提供
+							</a>
+						)}
 					</div>
 				</div>
-				<div
-					class="dynamic-count"
-					aria-label={`${dynamicCount} ${i18n(I18nKey.dynamic)}`}
-				>
-					<Icon is:inline name="material-symbols:dynamic-feed-rounded" />
-					<strong>{dynamicCount}</strong>
-					<span>{i18n(I18nKey.dynamic)}</span>
-				</div>
-				<div class="dynamic-filter">
+					<div class="dynamic-header-end">
+						{
+							showUmamiViews && (
+								<div
+									class="dynamic-pv-badge"
+									data-umami-pv-path="/dynamic/"
+									data-umami-share-id={umamiShareId}
+									data-umami-api-base={umamiApiBase}
+								>
+									<Icon is:inline
+										name="material-symbols:visibility-outline-rounded"
+										class="dynamic-pv-icon"
+									/>
+									<span class="dynamic-pv-value" data-umami-pv-value>—</span>
+									<span class="dynamic-pv-label">{i18n(I18nKey.pageViews)}</span>
+								</div>
+							)
+						}
+						<div
+							class="dynamic-count"
+							aria-label={`${dynamicCount} ${i18n(I18nKey.dynamic)}`}
+							>
+								<Icon is:inline name="material-symbols:dynamic-feed-rounded" />
+								<strong>{dynamicCount}</strong>
+								<span>{i18n(I18nKey.dynamic)}</span>
+							</div>
+						</div>
+						<div class="dynamic-filter">
 					<label class="dynamic-search">
 						<Icon is:inline name="material-symbols:search-rounded" />
 						<input
@@ -80,6 +140,73 @@ const dynamicCount = (await getCollection("dynamic")).length;
 			/>
 
 			<DynamicItemTemplate />
+
+			<script>
+				// Umami 浏览量 - 动态页面
+				const SHARE_CACHE_KEY = "umami-profile-share";
+				const SHARE_CACHE_TTL = 24 * 60 * 60 * 1000;
+				const METRICS_CACHE_KEY = "umami-pv-metrics";
+				const METRICS_CACHE_TTL = 5 * 60 * 1000;
+
+				async function getShare(apiBase, shareId) {
+					const cached = JSON.parse(localStorage.getItem(SHARE_CACHE_KEY) || "null");
+					if (cached && cached.tag === shareId && Date.now() - cached.timestamp < SHARE_CACHE_TTL) return cached.value;
+					const resp = await fetch(`${apiBase}/api/share/${shareId}`);
+					if (!resp.ok) throw new Error();
+					const data = await resp.json();
+					localStorage.setItem(SHARE_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), tag: shareId, value: data }));
+					return data;
+				}
+
+				async function getMetrics(apiBase, share) {
+					const cached = JSON.parse(localStorage.getItem(METRICS_CACHE_KEY) || "null");
+					if (cached && cached.tag === share.websiteId && Date.now() - cached.timestamp < METRICS_CACHE_TTL) return cached.value;
+					const url = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
+					const resp = await fetch(url, {
+						headers: { "x-umami-share-token": share.token, "x-umami-share-context": "1" },
+					});
+					if (!resp.ok) throw new Error();
+					const data = await resp.json();
+					localStorage.setItem(METRICS_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), tag: share.websiteId, value: data }));
+					return data;
+				}
+
+				function normalize(p) { return p.replace(/\/+$/, "").toLowerCase(); }
+
+				async function fillPageView() {
+					const nodes = document.querySelectorAll("[data-umami-pv-path]");
+					if (!nodes.length) return;
+					const first = nodes[0];
+					const shareId = first.dataset.umamiShareId;
+					const apiBase = (first.dataset.umamiApiBase || "").replace(/\/$/, "");
+					if (!shareId || !apiBase) return;
+					try {
+						const share = await getShare(apiBase, shareId);
+						const metrics = await getMetrics(apiBase, share);
+						const lookup = {};
+						for (const r of metrics) {
+							const key = normalize(r.x);
+							lookup[key] = (lookup[key] || 0) + (r.y || 0);
+						}
+						nodes.forEach((node) => {
+							const value = node.querySelector("[data-umami-pv-value]");
+							if (!value) return;
+							value.textContent = (lookup[normalize(node.dataset.umamiPvPath || "")] || 0).toLocaleString("en-US");
+						});
+					} catch {
+						nodes.forEach((node) => {
+							const el = node.querySelector("[data-umami-pv-value]");
+							if (el) el.textContent = "—";
+						});
+					}
+				}
+
+				function run() { requestAnimationFrame(() => fillPageView()); }
+				run();
+				document.addEventListener("swup:contentReplaced", run);
+				document.addEventListener("astro:page-load", run);
+			</script>
+
 		</div>
 	</section>
 </MainGridLayout>

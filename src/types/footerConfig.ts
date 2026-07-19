@@ -11,4 +11,11 @@ export type FooterConfig = {
 		degradedLabel: string;
 		downLabel: string;
 	};
+	// 底部社交链接
+	socialLinks?: {
+		name: string;
+		icon: string;
+		url: string;
+		showName?: boolean;
+	}[];
 };

@@ -17,24 +17,15 @@ if (footerConfig.enable) {
 			"FooterConfig.html",
 		);
 		customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
+		// 移除HTML注释
 		customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
-	} catch (error: unknown) {
+	} catch (error) {
 		console.warn(
 			"FooterConfig.html文件读取失败:",
 			error instanceof Error ? error.message : String(error),
 		);
 	}
 }
-
-// 社交链接（过滤掉 RSS，RSS 在下面独立展示）
-const socialLinks = profileConfig.links.filter(
-	(l) => l.name.toLowerCase() !== "rss",
-);
-
-const showIcp = !!footerConfig.icp?.number;
-const showPolice = !!footerConfig.policeRecord?.number;
-const showStatus = !!footerConfig.status?.enabled;
-const statusCfg = footerConfig.status;
 ---
 
 
@@ -46,239 +37,44 @@ const statusCfg = footerConfig.status;
 <div
   class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6"
 >
-  <div class="transition text-50 text-sm text-center flex flex-col items-center justify-center gap-2">
-    {customFooterHtml && (
-      <div class="mb-2">
-        <div set:html={customFooterHtml} />
-      </div>
-    )}
-
-    <!-- 社交链接行 -->
-    {socialLinks.length > 0 && (
-      <div class="flex items-center gap-3 text-sm font-medium mt-1">
-        {socialLinks.map((link, i) => (
-          <>
-            <a
-              class="transition link text-(--primary) hover:opacity-80"
-              target="_blank"
-              href={link.url}>{link.name}</a
-            >
-            {i < socialLinks.length - 1 && (
-              <span class="w-1 h-1 rounded-full bg-black/20 dark:bg-white/20"></span>
-            )}
-          </>
-        ))}
-      </div>
-    )}
-
-    <!-- 版权 + 业务状态 -->
-    <div class="m-0.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-xs text-black/60 dark:text-white/60">
-      <span
-        >&copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}
-        . All Rights Reserved.</span
+  <div class="transition text-50 text-sm text-center wrap">
+    <div class="mb-2">
+      {customFooterHtml && <div set:html={customFooterHtml} />}
+    </div>
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+      &copy; <span id="copyright-year">{currentYear}</span>
+      {profileConfig.name}. All Rights Reserved.
+      <span aria-hidden="true">/</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href={url("rss.xml")}>RSS</a
       >
-      {showStatus && (
-        <>
-          <span aria-hidden="true">·</span>
-          <a
-            id="status-indicator"
-            href={statusCfg!.pageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-status-heartbeat={statusCfg!.heartbeatUrl}
-            data-status-up-label={statusCfg!.upLabel}
-            data-status-degraded-label={statusCfg!.degradedLabel}
-            data-status-down-label={statusCfg!.downLabel}
-            title="点击查看服务状态详情"
-            class="transition inline-flex items-center gap-1.5 text-sm font-medium hover:opacity-80"
-          >
-            <span class="relative flex h-2 w-2">
-              <span
-                data-status-dot-ping
-                class="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60 animate-ping"
-              ></span>
-              <span
-                data-status-dot-core
-                class="relative inline-flex h-2 w-2 rounded-full bg-green-500"
-              ></span>
-            </span>
-            <span
-              data-status-text
-              class="text-green-600 dark:text-green-400"
-              >{statusCfg!.upLabel}</span
-            >
-          </a>
-        </>
-      )}
+      <span aria-hidden="true">/</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href={url("sitemap-index.xml")}>Sitemap</a
+      >
     </div>
-
-    <!-- RSS + Sitemap + Powered by -->
-    <div class="m-0.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-black/60 dark:text-white/60">
-      <div class="flex items-center gap-x-2">
-        <a
-          class="transition link text-(--primary) hover:opacity-80"
-          target="_blank"
-          href={url("rss.xml")}>RSS</a
-        >
-        <span aria-hidden="true">·</span>
-        <a
-          class="transition link text-(--primary) hover:opacity-80"
-          target="_blank"
-          href={url("sitemap-index.xml")}>Sitemap</a
-        >
-      </div>
-      <span class="hidden md:inline-block w-1 h-1 rounded-full bg-black/20 dark:bg-white/20"></span>
-      <div class="flex items-center gap-1">
-        Powered by
-        <a
-          class="transition link text-(--primary) hover:opacity-80"
-          target="_blank"
-          href="https://astro.build">Astro</a
-        >
-        &
-        <a
-          class="transition link text-(--primary) hover:opacity-80"
-          target="_blank"
-          href="https://github.com/CuteLeaf/Firefly">Firefly</a
-        >
-      </div>
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+      <span>Powered by</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href="https://astro.build">Astro</a
+      >
+      <span aria-hidden="true">&</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href="https://github.com/CuteLeaf/Firefly">Firefly</a
+      >
     </div>
-
-    <!-- 备案号 -->
-    {(showIcp || showPolice) && (
-      <div class="mt-2 flex flex-wrap items-center justify-center gap-4">
-        {showIcp && (
-          <a
-            class="transition flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 text-xs text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-(--primary) dark:hover:text-(--primary)"
-            href={footerConfig.icp!.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <span>{footerConfig.icp!.number}</span>
-          </a>
-        )}
-        {showPolice && (
-          <a
-            class="transition flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 text-xs text-black/60 dark:text-white/60 hover:bg-black/10 dark:hover:bg-white/10 hover:text-(--primary) dark:hover:text-(--primary)"
-            href={footerConfig.policeRecord!.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <span>{footerConfig.policeRecord!.number}</span>
-          </a>
-        )}
-      </div>
-    )}
-
     <!--
       注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
-      如需调整 ICP / 公网安备备案号，修改 src/config/footerConfig.ts 的 icp / policeRecord 字段即可。
-      如需使用 FooterConfig.html 自定义 HTML 注入，把 footerConfig.enable 改为 true 并编辑对应文件。
+      如果您需要在底部增加内容，请在src/config/footerConfig.ts中修改enable属性为true，然后编辑src/config/FooterConfig.html文件。
+      您可以随意在src/config/FooterConfig.html中随意添加自定义内容，不需要修改Footer.astro文件。
     -->
   </div>
 </div>
-
-{showStatus && (
-  <script is:inline>
-    (function () {
-      var el = document.getElementById("status-indicator");
-      if (!el) return;
-
-      var heartbeatUrl = el.getAttribute("data-status-heartbeat");
-      if (!heartbeatUrl) return;
-
-      var labels = {
-        up: el.getAttribute("data-status-up-label") || "All systems normal",
-        degraded:
-          el.getAttribute("data-status-degraded-label") || "Partial outage",
-        down: el.getAttribute("data-status-down-label") || "Major outage",
-      };
-
-      var colorMap = {
-        up: {
-          dot: "bg-green-500",
-          text: "text-green-600 dark:text-green-400",
-        },
-        degraded: {
-          dot: "bg-amber-500",
-          text: "text-amber-600 dark:text-amber-400",
-        },
-        down: {
-          dot: "bg-red-500",
-          text: "text-red-600 dark:text-red-400",
-        },
-      };
-
-      var dotPing = el.querySelector("[data-status-dot-ping]");
-      var dotCore = el.querySelector("[data-status-dot-core]");
-      var text = el.querySelector("[data-status-text]");
-
-      function setState(state) {
-        var c = colorMap[state];
-        if (!c) return;
-        if (dotPing) {
-          dotPing.className =
-            "absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping " +
-            c.dot;
-        }
-        if (dotCore) {
-          dotCore.className =
-            "relative inline-flex h-2 w-2 rounded-full " + c.dot;
-        }
-        if (text) {
-          text.className = c.text;
-          text.textContent = labels[state];
-        }
-      }
-
-      fetch(heartbeatUrl, { cache: "no-store" })
-        .then(function (r) {
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          return r.json();
-        })
-        .then(function (data) {
-          var list = (data && data.heartbeatList) || {};
-          var ids = Object.keys(list);
-          if (ids.length === 0) return;
-          var up = 0;
-          var down = 0;
-          ids.forEach(function (id) {
-            var beats = list[id] || [];
-            var last = beats[beats.length - 1];
-            if (last && last.status === 1) up++;
-            else down++;
-          });
-          var state =
-            down === 0 ? "up" : up === 0 ? "down" : "degraded";
-          setState(state);
-        })
-        .catch(function () {
-          // fetch 失败时保持默认 "up" 状态
-        });
-    })();
-  </script>
-)}
