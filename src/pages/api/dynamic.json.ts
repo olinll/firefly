@@ -1,7 +1,8 @@
 import { createMarkdownProcessor } from "@astrojs/markdown-remark";
 import { dynamicConfig } from "@/config/dynamicConfig";
 
-let processor: Awaited<ReturnType<typeof createMarkdownProcessor>> | null = null;
+let processor: Awaited<ReturnType<typeof createMarkdownProcessor>> | null =
+	null;
 async function getProcessor() {
 	if (!processor) processor = await createMarkdownProcessor();
 	return processor;
@@ -39,12 +40,22 @@ async function fetchFromMemos(): Promise<
 		searchText: string;
 	}[]
 > {
-	const { serverUrl, accessToken, pageSize = 100, visibility = "public", tags } =
-		dynamicConfig.memos!;
+	if (!dynamicConfig.memos) {
+		throw new Error("Memos config not found");
+	}
+	const {
+		serverUrl,
+		accessToken,
+		pageSize = 100,
+		visibility = "public",
+		tags,
+	} = dynamicConfig.memos;
 	const baseUrl = serverUrl.replace(/\/+$/, "");
 	const url = `${baseUrl}/api/v1/memos?pageSize=${pageSize}`;
-	const headers: Record<string, string> = { "Content-Type": "application/json" };
-	if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+	};
+	if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
 	const response = await fetch(url, { headers });
 	if (!response.ok) throw new Error(`Memos API error: HTTP ${response.status}`);
@@ -54,7 +65,9 @@ async function fetchFromMemos(): Promise<
 
 	const promises = (data.memos || [])
 		.filter((memo) => visibility !== "public" || memo.visibility === "PUBLIC")
-		.filter((memo) => !tags?.length || tags.some((tag) => memo.tags?.includes(tag)))
+		.filter(
+			(memo) => !tags?.length || tags.some((tag) => memo.tags?.includes(tag)),
+		)
 		.map(async (memo) => {
 			const images: { alt: string; src: string }[] = [];
 
@@ -90,7 +103,7 @@ async function fetchFromMemos(): Promise<
 				published: new Date(memo.displayTime || memo.createTime).getTime(),
 				html: rendered.code,
 				images,
-				searchText: (memo.content || "").replace(/[#*`\[\]]/g, "").trim(),
+				searchText: (memo.content || "").replace(/[#*`[\]]/g, "").trim(),
 			};
 		});
 

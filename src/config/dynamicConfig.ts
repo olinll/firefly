@@ -25,6 +25,6 @@ export const dynamicConfig: DynamicConfig = {
 		visibility: "public",
 		// 标签过滤：仅显示包含这些标签的 memos，空数组或删除此字段则显示全部
 		// 例如 ["日常", "技术"], 则只显示标签包含 "日常" 或 "技术" 的 memo
-		tags: ['blog'],
+		tags: ["blog"],
 	},
 };
