@@ -105,9 +105,7 @@
         </a>
     </div>
 
-    <div class="footer-info">
-        <span id="runtime">⌛小破站正在加载...</span>
-    </div>
+
 
     <div class="footer-info">
         <a target="_blank" href="https://beian.miit.gov.cn/">
@@ -135,6 +133,9 @@ if (typeof window.__siteStartTime === 'undefined') {
             var s = Math.floor((diff % 60000) / 1000);
             el.innerHTML = '⌛小破站已运行 <span style="color:#FFA500">' + d + '</span>天 <span style="color:#1DBF97">' + h + '</span>时 <span style="color:#8A2BE2">' + m + '</span>分 <span style="color:#007EC6">' + s + '</span>秒';
         }
+    //         <div class="footer-info">
+    //     <span id="runtime">⌛小破站正在加载...</span>
+    // </div>
         update();
         setInterval(update, 1000);
     }

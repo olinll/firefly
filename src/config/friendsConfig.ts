@@ -210,6 +210,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+	{
+		title: "Zero - 浮生",
+		imgurl: "https://vtdd.vip/_astro/avatar.ryzKiMN3_19g6Gw.webp",
+		desc: "浮生一刹万般皆舍.",
+		siteurl: "https://vtdd.vip",
+		tags: ["Astro"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
