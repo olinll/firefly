@@ -219,6 +219,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
+	{
+		title: "萧小晓",
+		imgurl: "https://www.lxlovo.top/png.png",
+		desc: "一个爱写文的菜鸡。",
+		siteurl: "https://blog.lxlovo.top",
+		tags: ["Astro"],
+		weight: 5,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
