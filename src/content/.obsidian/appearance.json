@@ -1,7 +1,7 @@
 {
-	"accentColor": "#2563eb",
-	"textFontFamily": "霞鹜文楷",
-	"monospaceFontFamily": "JetBrains Mono",
-	"baseFontSizeAction": true,
-	"baseFontSize": 18
+  "accentColor": "#2563eb",
+  "textFontFamily": "霞鹜文楷",
+  "monospaceFontFamily": "JetBrains Mono",
+  "baseFontSizeAction": true,
+  "baseFontSize": 18
 }

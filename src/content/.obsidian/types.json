@@ -1,10 +1,11 @@
 {
-	"types": {
-		"aliases": "aliases",
-		"cssclasses": "multitext",
-		"tags": "tags",
-		"date": "date",
-		"category": "text",
-		"comment": "datetime"
-	}
+  "types": {
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "tags": "tags",
+    "date": "date",
+    "category": "text",
+    "comment": "datetime",
+    "published": "text"
+  }
 }

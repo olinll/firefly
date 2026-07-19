@@ -237,7 +237,7 @@ export const friendsConfig: FriendLink[] = [
 		weight: 5,
 		enabled: true,
 	},
-		{
+	{
 		title: "极客指北",
 		imgurl: "https://www.90svip.cn",
 		desc: "探索科技之路，分享美好生活！",
