@@ -34,9 +34,7 @@ export const fontsList: FontDefinition[] = [
 		options: {
 			variants: [
 				{
-					src: ["./public/assets/fonts/Chikushi-A-maru-Bold.woff2"],
-					weight: 700,
-					style: "normal",
+					src: ["./public/assets/fonts/Chikushi-A-maru.woff2"],
 				},
 			],
 		},
@@ -68,6 +66,15 @@ export const fontsList: FontDefinition[] = [
 			"Courier New",
 			"monospace",
 		],
+	},
+	{
+		name: "Zen Maru Gothic",
+		cssVariable: "--font-zen-maru-gothic",
+		provider: "fontsource",
+		weights: ["300", "400", "500", "600", "700"],
+		styles: ["normal"],
+		subsets: ["latin", "cyrillic"],
+		fallbacks: ["sans-serif"],
 	},
 	// ─── 本地字体示例 ───
 	// 使用步骤：
@@ -102,16 +109,16 @@ export const fontConfig: FontSelectionConfig = {
 	// 主页横幅主标题字体
 	bannerTitleFont: "--font-chikushi-a-maru",
 	// 主页横幅副标题字体
-	bannerSubtitleFont: "--font-chikushi-a-maru",
+	bannerSubtitleFont: "--font-inter",
 	// 导航栏标题字体
-	navbarTitleFont: "",
+	navbarTitleFont: "--font-chikushi-a-maru",
 	// 代码块字体（用于代码高亮和等宽字体场景）
 	codeFont: "--font-jetbrains-mono",
 
 	// 本地字体子集化配置（构建时由 scripts/subset-fonts.ts 处理）
 	// key 为 fonts 数组中对应的 cssVariable，value 为子集化选项
 	subsetFonts: {
-		"--font-greatvibes": {
+		"--font-chikushi-a-maru": {
 			// 额外包含的字符
 			extraChars: "",
 		},
