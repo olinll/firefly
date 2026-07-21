@@ -3,6 +3,15 @@ export type DynamicConfig = {
 	description?: string;
 	showComment?: boolean;
 	itemsPerPage?: number;
+	// 封面配置（微信朋友圈风格）
+	cover?: {
+		// 是否启用封面
+		enable: boolean;
+		// 封面图片 URL
+		image: string;
+		// 封面上的问候语
+		greeting?: string;
+	};
 	// Memos 集成（配置后将从 Memos 拉取动态，忽略本地 content/dynamic/）
 	memos?: {
 		// Memos 服务地址，例如 "https://memos.example.com"

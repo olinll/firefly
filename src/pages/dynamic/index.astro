@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import DynamicCover from "@/components/pages/dynamic/DynamicCover.astro";
 import DynamicFeed from "@/components/pages/dynamic/DynamicFeed.svelte";
 import DynamicItemTemplate from "@/components/pages/dynamic/DynamicItemTemplate.astro";
 import {
@@ -64,29 +65,29 @@ if (dynamicConfig.memos?.serverUrl) {
 
 <MainGridLayout title={title} description={description}>
 	<section class="dynamic-page" aria-labelledby="dynamic-page-title">
-		<div>
-			<header class="dynamic-page-header card-base">
-				<div class="dynamic-page-heading">
-					<div class="dynamic-page-icon" aria-hidden="true">
-						<Icon is:inline name="material-symbols:forum-rounded" />
-					</div>
-					<div>
+		{
+			dynamicConfig.cover?.enable ? (
+				<DynamicCover
+					{title}
+					{description}
+					dynamicCount={dynamicCount}
+					showUmamiViews={showUmamiViews}
+					umamiShareId={umamiShareId}
+					umamiApiBase={umamiApiBase}
+				/>
+			) : (
+				<header class="dynamic-page-header card-base">
+					<div class="dynamic-page-heading">
+						<div class="dynamic-page-icon" aria-hidden="true">
+							<Icon is:inline name="material-symbols:forum-rounded" />
+						</div>
+						<div>
 							<div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
 								<h2 id="dynamic-page-title">{title}</h2>
 							</div>
-						{description && <p>{description}</p>}
-						{dynamicConfig.memos?.serverUrl && (
-							<a
-								class="dynamic-powered-by"
-								href={dynamicConfig.memos.serverUrl.replace(/\/+$/, "")}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								由 Memos 提供
-							</a>
-						)}
+							{description && <p>{description}</p>}
+						</div>
 					</div>
-				</div>
 					<div class="dynamic-header-end">
 						{
 							showUmamiViews && (
@@ -108,31 +109,34 @@ if (dynamicConfig.memos?.serverUrl) {
 						<div
 							class="dynamic-count"
 							aria-label={`${dynamicCount} ${i18n(I18nKey.dynamic)}`}
-							>
-								<Icon is:inline name="material-symbols:dynamic-feed-rounded" />
-								<strong>{dynamicCount}</strong>
-								<span>{i18n(I18nKey.dynamic)}</span>
-							</div>
+						>
+							<Icon is:inline name="material-symbols:dynamic-feed-rounded" />
+							<strong>{dynamicCount}</strong>
+							<span>{i18n(I18nKey.dynamic)}</span>
 						</div>
-						<div class="dynamic-filter">
-					<label class="dynamic-search">
-						<Icon is:inline name="material-symbols:search-rounded" />
-						<input
-							type="search"
-							data-dynamic-search
-							placeholder={i18n(I18nKey.dynamicSearch)}
-						/>
-					</label>
-					<label class="dynamic-year-select">
-						<Icon is:inline name="material-symbols:calendar-month-rounded" />
-						<select data-year-select aria-label={i18n(I18nKey.year)}>
-							<option value="all">{i18n(I18nKey.dynamicAllYears)}</option>
-						</select>
-						<Icon is:inline name="material-symbols:arrow-drop-down-rounded" />
-					</label>
-				</div>
-			</header>
+					</div>
+					<div class="dynamic-filter">
+						<label class="dynamic-search">
+							<Icon is:inline name="material-symbols:search-rounded" />
+							<input
+								type="search"
+								data-dynamic-search
+								placeholder={i18n(I18nKey.dynamicSearch)}
+							/>
+						</label>
+						<label class="dynamic-year-select">
+							<Icon is:inline name="material-symbols:calendar-month-rounded" />
+							<select data-year-select aria-label={i18n(I18nKey.year)}>
+								<option value="all">{i18n(I18nKey.dynamicAllYears)}</option>
+							</select>
+							<Icon is:inline name="material-symbols:arrow-drop-down-rounded" />
+						</label>
+					</div>
+				</header>
+			)
+		}
 
+		<div>
 			<DynamicFeed
 				client:load
 				source={dataUrl}
@@ -167,8 +171,8 @@ if (dynamicConfig.memos?.serverUrl) {
 				async function getMetrics(apiBase: string, share: { websiteId: string; token: string }) {
 					const cached = JSON.parse(localStorage.getItem(METRICS_CACHE_KEY) || "null");
 					if (cached && cached.tag === share.websiteId && Date.now() - cached.timestamp < METRICS_CACHE_TTL) return cached.value;
-					const url = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
-					const resp = await fetch(url, {
+					const metricsUrl = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
+					const resp = await fetch(metricsUrl, {
 						headers: { "x-umami-share-token": share.token, "x-umami-share-context": "1" },
 					});
 					if (!resp.ok) throw new Error();
@@ -212,7 +216,6 @@ if (dynamicConfig.memos?.serverUrl) {
 				document.addEventListener("swup:contentReplaced", run);
 				document.addEventListener("astro:page-load", run);
 			</script>
-
 		</div>
 	</section>
 </MainGridLayout>

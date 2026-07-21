@@ -103,7 +103,7 @@ dynamic-feed {
 	width: 100%;
 	min-height: 2.75rem;
 	border: 1px solid var(--line-divider);
-	border-radius: var(--radius-large);
+	border-radius: 9999px;
 	outline: none;
 	background: transparent;
 	color: rgb(0 0 0 / 90%);
@@ -143,7 +143,7 @@ dynamic-feed {
 	min-height: 2.75rem;
 	appearance: none;
 	border: 1px solid var(--line-divider);
-	border-radius: var(--radius-large);
+	border-radius: 9999px;
 	outline: none;
 	background: var(--card-bg);
 	color: rgb(0 0 0 / 90%);
