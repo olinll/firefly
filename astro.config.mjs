@@ -59,6 +59,7 @@ export default defineConfig({
 	base: "/",
 	trailingSlash: "always",
 
+
 	// 短链接 / 重定向配置
 	// 内部路径: "/link" -> "/friends/"  外部链接: "/avatar" -> "https://..."
 	redirects: redirectsConfig,
@@ -292,6 +293,7 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 		server: {
+			allowedHosts: ["1.oi.cd"],
 			watch: {
 				ignored: ["**/package/**", "**/Firefly-docs/**"],
 			},
