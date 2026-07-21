@@ -27,7 +27,7 @@ export const dynamicConfig: DynamicConfig = {
 		serverUrl: "https://note.olinl.com",
 		// serverUrl: "http://10.0.0.11:5230",
 		// Memos API Token（个人设置 → 访问令牌）
-		// accessToken: "",
+		accessToken: "",
 		// 每页获取条数
 		pageSize: 100,
 		// 显示规则："all" 显示全部, "public" 仅公开
