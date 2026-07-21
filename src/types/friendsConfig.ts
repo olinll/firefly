@@ -15,5 +15,4 @@ export type FriendsPageConfig = {
 	showCustomContent?: boolean; // 是否显示自定义内容（friends.mdx）
 	showComment?: boolean; // 是否显示评论区，默认 true
 	randomizeSort?: boolean; // 是否打乱排序，如果为 true，将忽略 weight，随机排序
-	jsonUrl?: string; // 外部 JSON 数据源 URL，默认 "https://row-blog.olinl.com/friends.json"
 };
