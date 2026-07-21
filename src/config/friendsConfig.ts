@@ -18,6 +18,9 @@ export const friendsPageConfig: FriendsPageConfig = {
 
 	// 是否开启随机排序配置，如果开启，就会忽略权重，构建时进行一次随机排序
 	randomizeSort: true,
+
+			// external json data url
+			// jsonUrl: "https://row-blog.olinl.com/friends.json",
 };
 
 // 友链配置

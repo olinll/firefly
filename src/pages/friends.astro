@@ -33,10 +33,6 @@ const isCommentEnabled =
 	commentConfig.type !== "none" &&
 	friendsPageConfig.showComment !== false;
 
-// 使用配置文件中的友链数据，按权重排序
-const items = getEnabledFriends();
-const allTags = [...new Set(items.flatMap((item) => item.tags || []))].sort();
-
 // 页面标题和描述
 const title = friendsPageConfig.title || i18n(I18nKey.friends);
 const description =
@@ -49,369 +45,496 @@ const umamiShareId = umamiCfg?.shareId || "";
 const umamiApiBase =
 	umamiCfg?.shareApiBase ||
 	(umamiCfg?.scriptUrl ? new URL(umamiCfg.scriptUrl).origin : "");
+
+// 判断是否启用外部 JSON 动态获取
+const useExternalJson = !!friendsPageConfig.jsonUrl;
+const friendsJsonUrl = friendsPageConfig.jsonUrl || "";
+
+// 未启用外部 JSON 时，直接使用内置配置
+const items = !useExternalJson ? getEnabledFriends() : [];
+const allTags = !useExternalJson
+	? [...new Set(items.flatMap((item) => item.tags || []))].sort()
+	: [];
 ---
 
 <MainGridLayout title={title} description={description}>
-  <div
-    class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
-  >
-    <div class="card-base z-10 px-9 py-6 relative w-full">
-      <!-- 页面标题和描述 -->
-      <div class="mb-4">
-        <div class="flex items-center gap-3 mb-3">
-          <div
-            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
-          >
-            <Icon is:inline name="material-symbols:group" class="text-[1.5rem]" />
-          </div>
-          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-            {title}
-          </div>
-          {
-            showUmamiViews && (
-              <div
-                class="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/50 text-xs transition"
-                data-umami-pv-path="/friends/"
-                data-umami-share-id={umamiShareId}
-                data-umami-api-base={umamiApiBase}
-              >
-                <Icon is:inline name="material-symbols:visibility-outline-rounded" class="text-(--primary) text-base" />
-                <span class="font-bold text-neutral-900 dark:text-neutral-100 whitespace-nowrap" data-umami-pv-value>—</span>
-                <span class="text-neutral-500 dark:text-neutral-400 whitespace-nowrap">{i18n(I18nKey.pageViews)}</span>
-              </div>
-            )
-          }
-        </div>
-        {
-          description && (
-            <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-              {description}
-            </p>
-          )
-        }
-      </div>
+	<div
+		class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
+	>
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<!-- 页面标题和描述 -->
+			<div class="mb-4">
+				<div class="flex items-center gap-3 mb-3">
+					<div
+						class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
+					>
+						<Icon is:inline name="material-symbols:group" class="text-[1.5rem]" />
+					</div>
+					<div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+						{title}
+					</div>
+					{
+						showUmamiViews && (
+							<div
+								class="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/50 text-xs transition"
+								data-umami-pv-path="/friends/"
+								data-umami-share-id={umamiShareId}
+								data-umami-api-base={umamiApiBase}
+							>
+								<Icon is:inline name="material-symbols:visibility-outline-rounded" class="text-(--primary) text-base" />
+								<span class="font-bold text-neutral-900 dark:text-neutral-100 whitespace-nowrap" data-umami-pv-value>—</span>
+								<span class="text-neutral-500 dark:text-neutral-400 whitespace-nowrap">{i18n(I18nKey.pageViews)}</span>
+							</div>
+						)
+					}
+				</div>
+				{
+					description && (
+						<p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+							{description}
+						</p>
+					)
+				}
+			</div>
 
-      <!-- 搜索框 -->
-      {
-        items.length > 0 && (
-          <friend-filter class="mb-6">
-            <div class="relative mb-3">
-              <Icon is:inline
-                name="material-symbols:search"
-                class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 text-lg pointer-events-none"
-              />
-              <input
-                type="text"
-                data-search
-                placeholder={i18n(I18nKey.searchFriends) || "搜索友链..."}
-                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-all duration-200 text-sm"
-              />
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <button
-                data-tag="all"
-                class="btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium"
-              >
-                {i18n(I18nKey.all)}
-              </button>
-              {allTags.map((tag) => (
-                <button
-                  data-tag={tag}
-                  class="btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </friend-filter>
-        )
-      }
+			<!-- 搜索框 + 标签筛选 -->
+			{
+				(useExternalJson || items.length > 0) && (
+					<friend-filter class="mb-6" data-use-external={useExternalJson ? "1" : "0"} data-json-url={friendsJsonUrl}>
+						<div class="relative mb-3">
+							<Icon is:inline
+								name="material-symbols:search"
+								class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 text-lg pointer-events-none"
+							/>
+							<input
+								type="text"
+								data-search
+								placeholder={i18n(I18nKey.searchFriends) || "搜索友链..."}
+								class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-all duration-200 text-sm"
+							/>
+						</div>
+						{
+							!useExternalJson && (
+								<div class="flex flex-wrap gap-2" data-tags-container>
+									<button
+										data-tag="all"
+										class="btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium"
+									>
+										{i18n(I18nKey.all)}
+									</button>
+									{allTags.map((tag) => (
+										<button
+											data-tag={tag}
+											class="btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium"
+										>
+											{tag}
+										</button>
+									))}
+								</div>
+							)
+						}
+					</friend-filter>
+				)
+			}
 
-      <div class="friends-grid my-4">
-        {
-          items.length === 0 && (
-            <div class="col-span-full flex flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
-              <Icon is:inline name="material-symbols:group-off-outline" class="text-4xl mb-3" />
-              <div class="text-sm">{i18n(I18nKey.friendsEmpty)}</div>
-            </div>
-          )
-        }
-        {
-          items.map((item) => (
-            <a
-              href={item.siteurl}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-tags={item.tags?.join(",")}
-              class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden"
-            >
-              {/* 背景装饰 - 仅悬停显示 */}
-              <div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
+			<!-- 外部 JSON 模式：加载状态 -->
+			{
+				useExternalJson && (
+					<div id="friends-loading" class="flex items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
+						<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+						<span class="text-sm">加载中...</span>
+					</div>
+				)
+			}
 
-              {/* 头像 */}
-              <div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
-                <img
-                  src={item.imgurl}
-                  alt={item.title}
-                  class="w-full h-full object-cover"
-                />
-              </div>
+			<!-- 友链网格 -->
+			<div class="friends-grid my-4" id="friends-grid">
+				{
+					!useExternalJson && items.length === 0 && (
+						<div class="col-span-full flex flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
+							<Icon is:inline name="material-symbols:group-off-outline" class="text-4xl mb-3" />
+							<div class="text-sm">{i18n(I18nKey.friendsEmpty)}</div>
+						</div>
+					)
+				}
+				{
+					!useExternalJson && items.map((item) => (
+						<a
+							href={item.siteurl}
+							target="_blank"
+							rel="noopener noreferrer"
+							data-tags={item.tags?.join(",")}
+							class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+						>
+							{/* 背景装饰 - 仅悬停显示 */}
+							<div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
 
-              {/* 内容 */}
-              <div class="grow min-w-0 flex flex-col justify-center gap-0.5">
-                <div class="flex items-center justify-between">
-                  <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">
-                    {item.title}
-                  </div>
-                  {/* 外部链接图标 */}
-                  <Icon is:inline
-                    name="material-symbols:arrow-outward-rounded"
-                    class="text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                  />
-                </div>
+							{/* 头像 */}
+							<div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
+								<img
+									src={item.imgurl}
+									alt={item.title}
+									class="w-full h-full object-cover"
+								/>
+							</div>
 
-                <div
-                  class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1"
-                  title={item.desc}
-                >
-                  {item.desc}
-                </div>
+							{/* 内容 */}
+							<div class="grow min-w-0 flex flex-col justify-center gap-0.5">
+								<div class="flex items-center justify-between">
+									<div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">
+										{item.title}
+									</div>
+									{/* 外部链接图标 */}
+									<Icon is:inline
+										name="material-symbols:arrow-outward-rounded"
+										class="text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+									/>
+								</div>
 
-                {/* 标签 */}
-                <div class="flex flex-wrap gap-1 mt-1">
-                  {item.tags && item.tags.length > 0
-                    ? item.tags
-                        .slice(0, 3)
-                        .map((tag) => (
-                          <span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-300">
-                            {tag}
-                          </span>
-                        ))
-                    : null}
-                </div>
-              </div>
-            </a>
-          ))
-        }
-      </div>
+								<div
+									class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1"
+									title={item.desc}
+								>
+									{item.desc}
+								</div>
 
-      {/* 搜索无结果提示 */}
-      <div class="friends-empty hidden flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
-        <Icon is:inline name="material-symbols:search-off-rounded" class="text-4xl mb-3" />
-        <div class="text-sm">{i18n(I18nKey.searchNoResults)}</div>
-      </div>
-    </div>
-  </div>
+								{/* 标签 */}
+								<div class="flex flex-wrap gap-1 mt-1">
+									{item.tags && item.tags.length > 0
+										? item.tags
+												.slice(0, 3)
+												.map((tag) => (
+													<span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-300">
+														{tag}
+													</span>
+												))
+										: null}
+								</div>
+							</div>
+						</a>
+					))
+				}
+			</div>
 
-  {friendsPageConfig.showCustomContent !== false && (
-    <div class="mt-4 card-base z-10 px-9 py-6 relative w-full">
-      <Markdown class="">
-        <Content />
-      </Markdown>
-    </div>
-  )}
+			<!-- 搜索无结果提示 -->
+			<div id="friends-empty" class="hidden flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
+				<Icon is:inline name="material-symbols:search-off-rounded" class="text-4xl mb-3" />
+				<div class="text-sm">{i18n(I18nKey.searchNoResults)}</div>
+			</div>
+		</div>
+	</div>
 
-  <!-- 评论区 -->
-  {isCommentEnabled && (
-    <div class="mt-4">
-      <Comment post={friendsPost} customPath="/friends/" />
-    </div>
-  )}
+	{friendsPageConfig.showCustomContent !== false && (
+		<div class="mt-4 card-base z-10 px-9 py-6 relative w-full">
+			<Markdown class="">
+				<Content />
+			</Markdown>
+		</div>
+	)}
 
-  <script slot="head" is:inline>
-    if (!customElements.get("friend-filter")) {
-      class FriendFilter extends HTMLElement {
-        selectedTag = "all";
+	<!-- 评论区 -->
+	{isCommentEnabled && (
+		<div class="mt-4">
+			<Comment post={friendsPost} customPath="/friends/" />
+		</div>
+	)}
 
-        constructor() {
-          super();
-        }
+	<script slot="head" is:inline>
+		const filterEl = document.querySelector("friend-filter");
+		const USE_EXTERNAL = filterEl ? filterEl.dataset.useExternal : "0";
+		const JSON_URL = filterEl ? filterEl.dataset.jsonUrl : "";
 
-        connectedCallback() {
-          this.addEventListener("click", this.handleClick);
-          const input = this.querySelector("[data-search]");
-          if (input) {
-            input.addEventListener("input", () => this.applyFilters());
-          }
-        }
+		let friendsData = [];
+		let selectedTag = "all";
+		let searchQuery = "";
 
-        disconnectedCallback() {
-          this.removeEventListener("click", this.handleClick);
-        }
+		function escapeHtml(str) {
+			const div = document.createElement("div");
+			div.textContent = str;
+			return div.innerHTML;
+		}
 
-        handleClick(e) {
-          const target = e.target;
-          const button = target.closest("button");
-          if (!button) return;
+		function renderTags(tags) {
+			const container = document.querySelector("[data-tags-container]");
+			if (!container) return;
 
-          this.selectedTag = button.dataset.tag;
-          const filters = this.querySelectorAll("button");
+			let html = '<button data-tag="all" class="btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium">全部</button>';
 
-          filters.forEach((f) => {
-            f.classList.remove("bg-(--primary)", "text-white");
-            f.classList.remove("hover:bg-(--primary)");
-            f.classList.add("bg-(--btn-regular-bg)", "text-(--btn-content)");
-            f.classList.add("hover:bg-(--btn-regular-bg-hover)");
+			for (const tag of tags) {
+				html += '<button data-tag="' + escapeHtml(tag) + '" class="btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium">' + escapeHtml(tag) + '</button>';
+			}
 
-            if (f === button) {
-              f.classList.remove("bg-(--btn-regular-bg)", "text-(--btn-content)");
-              f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
-              f.classList.add("bg-(--primary)", "text-white");
-              f.classList.add("hover:bg-(--primary)");
-            }
-          });
+			container.innerHTML = html;
+		}
 
-          this.applyFilters();
-        }
+		function renderFriends(friends) {
+			const grid = document.getElementById("friends-grid");
+			if (!grid) return;
 
-        applyFilters() {
-          const container = this.closest(".card-base");
-          if (!container) return;
+			if (friends.length === 0) {
+				grid.innerHTML = '<div class="col-span-full flex flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500"><svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg><div class="text-sm text-neutral-400">暂无友链数据</div></div>';
+				return;
+			}
 
-          const input = this.querySelector("[data-search]");
-          const query = (input?.value || "").toLowerCase().trim();
-          const cards = container.querySelectorAll(".friend-card");
+			let html = "";
+			for (const item of friends) {
+				const tagsHtml = (item.tags || [])
+					.slice(0, 3)
+					.map(
+						(t) =>
+							'<span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">' + escapeHtml(t) + '</span>',
+					)
+					.join("");
 
-          let hasVisible = false;
+				html += '<a href="' + escapeHtml(item.siteurl) + '" target="_blank" rel="noopener noreferrer" data-tags="' + escapeHtml((item.tags || []).join(",")) + '" class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden">';
+				html += '<div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"></div>';
+				html += '<div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">';
+				html += '<img src="' + escapeHtml(item.imgurl) + '" alt="' + escapeHtml(item.title) + '" class="w-full h-full object-cover" loading="lazy" />';
+				html += '</div>';
+				html += '<div class="grow min-w-0 flex flex-col justify-center gap-0.5">';
+				html += '<div class="flex items-center justify-between">';
+				html += '<div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">' + escapeHtml(item.title) + '</div>';
+				html += '<svg class="text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shrink-0" width="1em" height="1em" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>';
+				html += '</div>';
+				html += '<div class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1" title="' + escapeHtml(item.desc) + '">' + escapeHtml(item.desc) + '</div>';
+				if (tagsHtml) {
+					html += '<div class="flex flex-wrap gap-1 mt-1">' + tagsHtml + '</div>';
+				}
+				html += '</div></a>';
+			}
 
-          cards.forEach((card) => {
-            const cardEl = card;
-            const tags = (cardEl.dataset.tags || "").split(",");
-            const name = (cardEl.querySelector(".font-bold")?.textContent || "").toLowerCase();
-            const desc = (cardEl.querySelector(".line-clamp-1")?.textContent || "").toLowerCase();
+			grid.innerHTML = html;
+		}
 
-            const tagMatch =
-              this.selectedTag === "all" ||
-              (this.selectedTag && tags.includes(this.selectedTag));
-            const searchMatch =
-              !query ||
-              name.includes(query) ||
-              desc.includes(query) ||
-              tags.some((t) => t.toLowerCase().includes(query));
+		function showEmpty(visible) {
+			const el = document.getElementById("friends-empty");
+			if (!el) return;
+			el.classList.toggle("hidden", !visible);
+			el.classList.toggle("flex", visible);
+		}
 
-            if (tagMatch && searchMatch) {
-              cardEl.style.display = "";
-              cardEl.classList.add("animate-fade-in-up");
-              hasVisible = true;
-            } else {
-              cardEl.style.display = "none";
-              cardEl.classList.remove("animate-fade-in-up");
-            }
-          });
+		function applyFilters() {
+			const query = searchQuery.toLowerCase().trim();
+			const cards = document.querySelectorAll("#friends-grid .friend-card");
+			let hasVisible = false;
 
-          const emptyEl = container.querySelector(".friends-empty");
-          if (emptyEl) {
-            emptyEl.classList.toggle("hidden", hasVisible);
-            emptyEl.classList.toggle("flex", !hasVisible);
-          }
-        }
-      }
-      customElements.define("friend-filter", FriendFilter);
-    }
-  </script>
+			cards.forEach((card) => {
+				const tags = (card.dataset.tags || "").split(",");
+				const name = (card.querySelector(".font-bold")?.textContent || "").toLowerCase();
+				const desc = (card.querySelector(".line-clamp-1")?.textContent || "").toLowerCase();
 
-  <style is:global>
-    .friends-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 0.75rem;
-    }
-  </style>
+				const tagMatch =
+					selectedTag === "all" || (selectedTag && tags.includes(selectedTag));
+				const searchMatch =
+					!query ||
+					name.includes(query) ||
+					desc.includes(query) ||
+					tags.some((t) => t.toLowerCase().includes(query));
 
-  <script>
-    // Umami 浏览量 - 友链页面
-    const SHARE_CACHE_KEY = "umami-profile-share";
-    const SHARE_CACHE_TTL = 24 * 60 * 60 * 1000;
-    const METRICS_CACHE_KEY = "umami-pv-metrics";
-    const METRICS_CACHE_TTL = 5 * 60 * 1000;
+				if (tagMatch && searchMatch) {
+					card.style.display = "";
+					card.classList.add("animate-fade-in-up");
+					hasVisible = true;
+				} else {
+					card.style.display = "none";
+					card.classList.remove("animate-fade-in-up");
+				}
+			});
 
-    type ShareResponse = { token: string; websiteId: string };
-    type MetricRow = { x: string; y: number };
+			showEmpty(!hasVisible && cards.length > 0);
+		}
 
-    function readCache<T>(key: string, ttl: number, tag: string): T | null {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      try {
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.tag === tag && Date.now() - parsed.timestamp < ttl) {
-          return parsed.value as T;
-        }
-      } catch {}
-      localStorage.removeItem(key);
-      return null;
-    }
+		async function loadFriendsFromJson() {
+			try {
+				const res = await fetch(JSON_URL);
+				if (!res.ok) throw new Error("HTTP " + res.status);
+				friendsData = await res.json();
 
-    function writeCache(key: string, tag: string, value: unknown) {
-      try {
-        localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), tag, value }));
-      } catch {}
-    }
+				const allTags = [...new Set(friendsData.flatMap((f) => f.tags || []))].sort();
 
-    async function getShare(apiBase: string, shareId: string): Promise<ShareResponse> {
-      const cached = readCache<ShareResponse>(SHARE_CACHE_KEY, SHARE_CACHE_TTL, shareId);
-      if (cached) return cached;
-      const resp = await fetch(`${apiBase}/api/share/${shareId}`);
-      if (!resp.ok) throw new Error(`share ${resp.status}`);
-      const data = (await resp.json()) as ShareResponse;
-      writeCache(SHARE_CACHE_KEY, shareId, data);
-      return data;
-    }
+				const loading = document.getElementById("friends-loading");
+				if (loading) loading.style.display = "none";
 
-    async function getMetrics(apiBase: string, share: ShareResponse): Promise<MetricRow[]> {
-      const cached = readCache<MetricRow[]>(METRICS_CACHE_KEY, METRICS_CACHE_TTL, share.websiteId);
-      if (cached) return cached;
-      const url = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
-      const resp = await fetch(url, {
-        headers: { "x-umami-share-token": share.token, "x-umami-share-context": "1" },
-      });
-      if (!resp.ok) throw new Error(`metrics ${resp.status}`);
-      const data = (await resp.json()) as MetricRow[];
-      writeCache(METRICS_CACHE_KEY, share.websiteId, data);
-      return data;
-    }
+				renderTags(allTags);
+				renderFriends(friendsData);
+			} catch (err) {
+				const loading = document.getElementById("friends-loading");
+				if (loading) {
+					loading.innerHTML = '<div class="flex flex-col items-center gap-2"><svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><span class="text-sm">友链数据加载失败，请刷新重试</span></div>';
+				}
+				console.error("Failed to load friends:", err);
+			}
+		}
 
-    function normalize(p: string): string {
-      return p.replace(/\/+$/, "").toLowerCase();
-    }
+		function initSearch() {
+			const input = document.querySelector("[data-search]");
+			if (!input) return;
 
-    async function fillPageView() {
-      const nodes = document.querySelectorAll<HTMLElement>("[data-umami-pv-path]");
-      if (nodes.length === 0) return;
+			input.addEventListener("input", (e) => {
+				searchQuery = e.target.value;
+				applyFilters();
+			});
+		}
 
-      const first = nodes[0];
-      const shareId = first.dataset.umamiShareId;
-      const apiBase = (first.dataset.umamiApiBase || "").replace(/\/$/, "");
-      if (!shareId || !apiBase) return;
+		function initFilter() {
+			const filter = document.querySelector("friend-filter");
+			if (!filter) return;
 
-      try {
-        const share = await getShare(apiBase, shareId);
-        const metrics = await getMetrics(apiBase, share);
-        const lookup = new Map<string, number>();
-        for (const r of metrics) {
-          const key = normalize(r.x);
-          lookup.set(key, (lookup.get(key) || 0) + (r.y || 0));
-        }
+			filter.addEventListener("click", (e) => {
+				const target = e.target.closest("button");
+				if (!target || !target.dataset.tag) return;
 
-        nodes.forEach((node) => {
-          const value = node.querySelector<HTMLElement>("[data-umami-pv-value]");
-          if (!value) return;
-          const path = normalize(node.dataset.umamiPvPath || "");
-          const count = lookup.get(path) ?? 0;
-          value.textContent = count.toLocaleString("en-US");
-        });
-      } catch {
-        nodes.forEach((node) => {
-          const value = node.querySelector<HTMLElement>("[data-umami-pv-value]");
-          if (value) value.textContent = "—";
-        });
-      }
-    }
+				selectedTag = target.dataset.tag;
 
-    function run() {
-      requestAnimationFrame(() => fillPageView());
-    }
-    run();
-    document.addEventListener("swup:contentReplaced", run);
-    document.addEventListener("astro:page-load", run);
-  </script>
+				filter.querySelectorAll(".btn-regular").forEach((btn) => {
+					btn.className = "btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium";
+				});
+				target.className = "btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium";
+
+				applyFilters();
+			});
+		}
+
+		function init() {
+			initSearch();
+			initFilter();
+
+			if (USE_EXTERNAL === "true") {
+				loadFriendsFromJson();
+			}
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", init);
+		} else {
+			init();
+		}
+
+		// Swup 页面切换后重新初始化
+		document.addEventListener("swup:contentReplaced", () => {
+			selectedTag = "all";
+			searchQuery = "";
+			init();
+		});
+	</script>
+
+	<style is:global>
+		.friends-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 0.75rem;
+		}
+
+		@keyframes fade-in-up {
+			from {
+				opacity: 0;
+				transform: translateY(8px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		.animate-fade-in-up {
+			animation: fade-in-up 0.3s ease-out;
+		}
+	</style>
+
+	<script>
+		// @ts-nocheck
+		// Umami 浏览量 - 友链页面
+		const SHARE_CACHE_KEY = "umami-profile-share";
+		const SHARE_CACHE_TTL = 24 * 60 * 60 * 1000;
+		const METRICS_CACHE_KEY = "umami-pv-metrics";
+		const METRICS_CACHE_TTL = 5 * 60 * 1000;
+
+		function readCache(key, ttl, tag) {
+			const raw = localStorage.getItem(key);
+			if (!raw) return null;
+			try {
+				const parsed = JSON.parse(raw);
+				if (parsed && parsed.tag === tag && Date.now() - parsed.timestamp < ttl) {
+					return parsed.value;
+				}
+			} catch {}
+			localStorage.removeItem(key);
+			return null;
+		}
+
+		function writeCache(key, tag, value) {
+			try {
+				localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), tag, value }));
+			} catch {}
+		}
+
+		async function getShare(apiBase, shareId) {
+			const cached = readCache(SHARE_CACHE_KEY, SHARE_CACHE_TTL, shareId);
+			if (cached) return cached;
+			const resp = await fetch(`${apiBase}/api/share/${shareId}`);
+			if (!resp.ok) throw new Error(`share ${resp.status}`);
+			const data = await resp.json();
+			writeCache(SHARE_CACHE_KEY, shareId, data);
+			return data;
+		}
+
+		async function getMetrics(apiBase, share) {
+			const cached = readCache(METRICS_CACHE_KEY, METRICS_CACHE_TTL, share.websiteId);
+			if (cached) return cached;
+			const url = `${apiBase}/api/websites/${share.websiteId}/metrics?startAt=0&endAt=${Date.now()}&type=path&limit=1000`;
+			const resp = await fetch(url, {
+				headers: { "x-umami-share-token": share.token, "x-umami-share-context": "1" },
+			});
+			if (!resp.ok) throw new Error(`metrics ${resp.status}`);
+			const data = await resp.json();
+			writeCache(METRICS_CACHE_KEY, share.websiteId, data);
+			return data;
+		}
+
+		function normalize(p) {
+			return p.replace(/\/+$/, "").toLowerCase();
+		}
+
+		async function fillPageView() {
+			const nodes = document.querySelectorAll("[data-umami-pv-path]");
+			if (nodes.length === 0) return;
+
+			const first = nodes[0];
+			const shareId = first.dataset.umamiShareId;
+			const apiBase = (first.dataset.umamiApiBase || "").replace(/\/$/, "");
+			if (!shareId || !apiBase) return;
+
+			try {
+				const share = await getShare(apiBase, shareId);
+				const metrics = await getMetrics(apiBase, share);
+				const lookup = new Map();
+				for (const r of metrics) {
+					const key = normalize(r.x);
+					lookup.set(key, (lookup.get(key) || 0) + (r.y || 0));
+				}
+
+				nodes.forEach((node) => {
+					const value = node.querySelector("[data-umami-pv-value]");
+					if (!value) return;
+					const path = normalize(node.dataset.umamiPvPath || "");
+					const count = lookup.get(path) ?? 0;
+					value.textContent = count.toLocaleString("en-US");
+				});
+			} catch {
+				nodes.forEach((node) => {
+					const value = node.querySelector("[data-umami-pv-value]");
+					if (value) value.textContent = "—";
+				});
+			}
+		}
+
+		function run() {
+			requestAnimationFrame(() => fillPageView());
+		}
+		run();
+		document.addEventListener("swup:contentReplaced", run);
+		document.addEventListener("astro:page-load", run);
+	</script>
 </MainGridLayout>
