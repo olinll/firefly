@@ -1,10 +1,10 @@
 ---
-title: '时间进度条小部件'
+title: 'Firefly 魔改：时间进度与节假日倒计时组件'
 slug: 'schedule-progress'
 published: 2026-07-21 19:41:29
 updated: 2026-07-22 19:30:00
 description: '年/月/周进度条，搭配节假日倒计时，帮你感知时间的流逝。'
-image: api
+image: https://row-blog.olinl.com/post-img/schedule-progress/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 小部件]
 draft: false

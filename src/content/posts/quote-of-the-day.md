@@ -1,10 +1,10 @@
 ---
-title: '今日一言小部件'
+title: 'Firefly 魔改：每日一言侧边栏组件'
 slug: 'quote-of-the-day'
 published: 2026-07-21 19:41:29
 updated: 2026-07-22 19:30:00
 description: '侧边栏每日一句名言，以日期为种子的伪随机算法确保同一天显示相同内容。'
-image: api
+image: https://row-blog.olinl.com/post-img/quote-of-the-day/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 小部件]
 draft: false

@@ -1,10 +1,10 @@
 ---
-title: '自定义鼠标指针样式'
+title: 'Firefly 魔改：自定义鼠标指针样式'
 slug: 'custom-cursor'
 published: 2026-07-21 19:41:32
 updated: 2026-07-22 19:30:00
 description: '使用 .cur 文件替换默认鼠标样式，区分默认态和可点击元素。'
-image: api
+image: https://row-blog.olinl.com/post-img/custom-cursor/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 样式]
 draft: false

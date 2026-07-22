@@ -1,10 +1,10 @@
 ---
-title: '复制成功提示浮层'
+title: 'Firefly 魔改：全局复制事件监听与提示浮层'
 slug: 'copy-toast'
 published: 2026-07-21 19:41:32
 updated: 2026-07-22 19:30:00
 description: '全局监听复制事件，复制成功后底部弹出提示浮层，附带动画进度条。'
-image: api
+image: https://row-blog.olinl.com/post-img/copy-toast/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 交互]
 draft: false

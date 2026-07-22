@@ -1,10 +1,10 @@
 ---
-title: 'GitHub 贡献热力图小部件'
+title: 'Firefly 魔改：GitHub 贡献热力图侧边栏'
 slug: 'github-heatmap'
 published: 2026-07-04 13:10:29
 updated: 2026-07-22 19:30:00
 description: '在侧边栏展示近 100 天的 GitHub 贡献数据，无需 Token 即可拉取。'
-image: api
+image: https://row-blog.olinl.com/post-img/github-heatmap/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, GitHub, 小部件]
 draft: false

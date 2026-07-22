@@ -1,10 +1,10 @@
 ---
-title: '为博客添加短链接与重定向系统'
+title: 'Firefly 魔改：基于 Astro redirects 的短链接系统'
 slug: 'shortlink'
 published: 2026-07-04 17:30:50
 updated: 2026-07-22 19:30:00
 description: '基于 Astro 内置 redirects 的轻量短链系统，让访客可以轻松记住你的链接。'
-image: api
+image: https://row-blog.olinl.com/post-img/shortlink/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, Astro]
 draft: false

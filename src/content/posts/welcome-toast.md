@@ -1,10 +1,10 @@
 ---
-title: '欢迎弹窗组件'
+title: 'Firefly 魔改：IP 定位欢迎弹窗组件'
 slug: 'welcome-toast'
 published: 2026-07-04 15:51:31
 updated: 2026-07-22 19:30:00
 description: '首次访问时右下角弹出欢迎提示，显示访客所在地，5 秒后自动关闭。'
-image: api
+image: https://row-blog.olinl.com/post-img/welcome-toast/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 交互]
 draft: false

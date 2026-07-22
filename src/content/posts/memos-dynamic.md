@@ -1,10 +1,10 @@
 ---
-title: '动态页集成 Memos API'
+title: 'Firefly 魔改：集成 Memos API 作为动态数据源'
 slug: 'memos-dynamic'
 published: 2026-07-19 15:03:19
 updated: 2026-07-22 19:30:00
 description: '将 Memos 作为动态数据源，支持标签过滤和可见性控制，替代本地 content/dynamic/。'
-image: api
+image: https://row-blog.olinl.com/post-img/memos-dynamic/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, Memos, 动态]
 draft: false

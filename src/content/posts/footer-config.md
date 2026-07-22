@@ -1,10 +1,10 @@
 ---
-title: '自定义页脚 FooterConfig.html'
+title: 'Firefly 魔改：FooterConfig 页脚模板定制'
 slug: 'footer-config'
 published: 2026-07-19 15:03:19
 updated: 2026-07-22 19:30:00
 description: '通过修改 FooterConfig.html 自由定制页脚——技术徽章、社交链接、备案号、运行时长。'
-image: api
+image: https://row-blog.olinl.com/post-img/footer-config/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 配置]
 draft: false

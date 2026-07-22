@@ -1,10 +1,10 @@
 ---
-title: '时段问候小部件'
+title: 'Firefly 魔改：时段问候实时时钟组件'
 slug: 'time-greeting'
 published: 2026-07-04 13:09:20
 updated: 2026-07-22 19:30:00
 description: '侧边栏实时时钟组件，根据时段自动切换问候语和背景图。'
-image: api
+image: https://row-blog.olinl.com/post-img/time-greeting/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开, 小部件]
 draft: false

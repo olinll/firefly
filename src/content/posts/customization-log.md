@@ -4,7 +4,7 @@ slug: 'customization-log'
 published: 2026-07-22 19:30:00
 updated: 2026-07-22 19:30:00
 description: 'Firefly 博客二次开发全记录，汇总所有自定义改动及其实现方式。'
-image: api
+image: https://row-blog.olinl.com/post-img/customization-log/cover.webp
 category: Firefly
 tags: [Firefly, 博客, 二开]
 draft: false
