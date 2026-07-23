@@ -29,7 +29,10 @@ const showInlineComments = Boolean(
 		commentConfig.type &&
 		commentConfig.type !== "none",
 );
-const dataUrl = url("/api/dynamic.json");
+const dataUrl = dynamicConfig.apiUrl?.startsWith("http")
+	? dynamicConfig.apiUrl
+	: url(dynamicConfig.apiUrl || "/api/dynamic.json");
+const memos = dynamicConfig.memos;
 
 // Umami 浏览量配置
 const umamiCfg = analyticsConfig.umamiAnalytics;
@@ -40,21 +43,18 @@ const umamiApiBase =
 	(umamiCfg?.scriptUrl ? new URL(umamiCfg.scriptUrl).origin : "");
 
 let dynamicCount = 0;
-if (dynamicConfig.memos?.serverUrl) {
+if (dynamicConfig.memos?.enable && dynamicConfig.memos?.apiUrl) {
 	try {
-		const svr = dynamicConfig.memos.serverUrl.replace(/\/+$/, "");
-		const tok = dynamicConfig.memos.accessToken;
-		const headers: Record<string, string> = {};
-		if (tok) headers.Authorization = `Bearer ${tok}`;
-		const r = await fetch(`${svr}/api/v1/memos?pageSize=1000`, { headers });
+		const apiUrl = dynamicConfig.memos.apiUrl.replace(/\/+$/, "");
+		const params = new URLSearchParams({ pageSize: "1000" });
+		if (dynamicConfig.memos.parent) {
+			params.set("parent", dynamicConfig.memos.parent);
+		}
+		const r = await fetch(`${apiUrl}/api/v1/memos?${params}`);
 		if (r.ok) {
 			const d = await r.json();
-			const tags = dynamicConfig.memos?.tags;
 			dynamicCount = (d.memos || []).filter(
-				(m: { visibility: string; tags?: string[] }) =>
-					(dynamicConfig.memos?.visibility !== "public" ||
-						m.visibility === "PUBLIC") &&
-					(!tags?.length || tags.some((t) => m.tags?.includes(t))),
+				(m: { state: string }) => m.state === "NORMAL",
 			).length;
 		}
 	} catch {}
@@ -147,6 +147,7 @@ if (dynamicConfig.memos?.serverUrl) {
 				loadingText={i18n(I18nKey.dynamicLoading)}
 				allYearsText={i18n(I18nKey.dynamicAllYears)}
 				timezone={siteConfig.timezone || "UTC"}
+				{memos}
 			/>
 
 			<DynamicItemTemplate />

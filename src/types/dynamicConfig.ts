@@ -3,6 +3,11 @@ export type DynamicConfig = {
 	description?: string;
 	showComment?: boolean;
 	itemsPerPage?: number;
+	// 动态数据 json 地址，本地默认 "/api/dynamic.json"
+	// 可改为第三方接口地址，如 "https://firefly.cuteleaf.cn/api/dynamic.json"
+	// 数据结构可打开上方链接地址参考
+	// 当 memos.enable 为 true 时，此配置会被忽略
+	apiUrl?: string;
 	// 封面配置（微信朋友圈风格）
 	cover?: {
 		// 是否启用封面
@@ -12,17 +17,15 @@ export type DynamicConfig = {
 		// 封面上的问候语
 		greeting?: string;
 	};
-	// Memos 集成（配置后将从 Memos 拉取动态，忽略本地 content/dynamic/）
-	memos?: {
-		// Memos 服务地址，例如 "https://memos.example.com"
-		serverUrl: string;
-		// Memos API Token（访问令牌）
-		accessToken: string;
-		// 每页获取条数，默认 100
-		pageSize?: number;
-		// 显示规则："all" 显示全部, "public" 仅公开
-		visibility?: "all" | "public";
-		// 标签过滤：仅显示包含这些标签的 memos，不配置或空数组则显示全部
-		tags?: string[];
-	};
+	// Memos 配置
+	memos?: DynamicMemocsConfig;
+};
+
+export type DynamicMemocsConfig = {
+	/** 是否启用 Memos 数据源 */
+	enable: boolean;
+	/** Memos 实例地址，如 "https://memos.example.com" */
+	apiUrl: string;
+	/** Memos 用户标识，如 "users/xiaye"，用于过滤指定用户的动态 */
+	parent?: string;
 };
