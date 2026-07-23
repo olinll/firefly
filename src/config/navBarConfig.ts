@@ -42,10 +42,10 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		url: "#",
 		icon: "material-symbols:group",
 		children: [
-			// 相册
+			// 友链
 			LinkPresets.Friends,
 
-			// 追番
+			// 留言
 			LinkPresets.Guestbook,
 		],
 	});
@@ -80,8 +80,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// LinkPresets.About,
 		],
 	});
-
-	// 自定义导航栏链接
 
 	// 自定义导航栏链接
 	links.push({
@@ -122,14 +120,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// 			icon: "material-symbols:docs",
 	// 		},
 	// 	],
-	// });
-
-	// 文档链接
-	// links.push({
-	// 	name: "文档",
-	// 	url: "https://docs-firefly.cuteleaf.cn",
-	// 	external: true,
-	// 	icon: "material-symbols:docs",
 	// });
 
 	return { links } as NavBarConfig;

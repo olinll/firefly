@@ -265,9 +265,9 @@ export const ru: Translation = {
 
 	// Статистика просмотров
 	[Key.pageViews]: "Просмотры",
-	[Key.pageVisitors]: "Посетители",
 	[Key.pageViewsLoading]: "Загрузка...",
 	[Key.pageViewsError]: "Статистика недоступна",
+	[Key.pageVisitors]: "Посетители",
 
 	// Закреплено
 	[Key.pinned]: "Закреплено",
@@ -302,6 +302,16 @@ export const ru: Translation = {
 	[Key.overlayOpacity]: "Прозрачность обоев",
 	[Key.overlayBlur]: "Размытие фона",
 	[Key.overlayCardOpacity]: "Прозрачность карточек",
+
+	// Вкладки панели настроек
+	[Key.settingsTabAppearance]: "Оформление",
+	[Key.settingsTabWallpaper]: "Обои",
+	[Key.settingsTabEffects]: "Эффекты",
+
+	// Стиль карточек
+	[Key.cardSettings]: "Стиль карточек",
+	[Key.cardBorder]: "Рамка и тень карточек",
+	[Key.cardFollowTheme]: "Карточки跟随主题色",
 
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",

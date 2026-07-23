@@ -263,9 +263,9 @@ export const en: Translation = {
 
 	// Page Views Statistics
 	[Key.pageViews]: "Views",
-	[Key.pageVisitors]: "Visitors",
 	[Key.pageViewsLoading]: "Loading...",
 	[Key.pageViewsError]: "Stats unavailable",
+	[Key.pageVisitors]: "Visitors",
 
 	// Pinned
 	[Key.pinned]: "Pinned",
@@ -300,6 +300,16 @@ export const en: Translation = {
 	[Key.overlayOpacity]: "Wallpaper Opacity",
 	[Key.overlayBlur]: "Background Blur",
 	[Key.overlayCardOpacity]: "Card Opacity",
+
+	// Settings Panel Tabs
+	[Key.settingsTabAppearance]: "Appearance",
+	[Key.settingsTabWallpaper]: "Wallpaper",
+	[Key.settingsTabEffects]: "Effects",
+
+	// Card Style
+	[Key.cardSettings]: "Card Style",
+	[Key.cardBorder]: "Card Border & Shadow",
+	[Key.cardFollowTheme]: "Card Follow Theme Color",
 
 	// Post List Layout
 	[Key.postListLayout]: "Post List Layout",

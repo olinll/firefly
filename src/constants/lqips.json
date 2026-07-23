@@ -18,6 +18,9 @@
   "public:assets/images/sponsor/alipay.png": "8ebbde91bedf93c0e0",
   "public:assets/images/ad/ad1.webp": "a1b8b68a8e918c8f93",
   "src:assets/images/logo.webp": "afafadb8b7b3acaaa6",
+  "public:assets/images/avatar.webp": "354f6b305273364351",
+  "public:assets/images/animals.webp": "827c578a7860554636",
+  "public:assets/images/qrcode.webp": "2d36382c31362a2e33",
   "src:content/firefly-posts/images/vitepress.avif": "3d3d43e1e1e7ebe0da",
   "src:content/firefly-posts/images/right-grid2.avif": "cbcdcddddcd9d8d7db",
   "src:content/firefly-posts/images/obsidian.avif": "3a4145dce3e6e8ded8",
@@ -32,8 +35,5 @@
   "src:content/firefly-posts/images/both-list.avif": "e5e7e4e6e8e7e3e3e5",
   "src:content/firefly-posts/images/both-grid.avif": "d5d6d3e6e7e3d8d9e3",
   "src:content/firefly-posts/images/1.avif": "b5b0b3bcb6bbe0e0df",
-  "src:content/firefly-posts/guide/cover.avif": "c8bca9dde6d2babfb5",
-  "public:assets/images/qrcode.webp": "2d36382c31362a2e33",
-  "public:assets/images/avatar.webp": "354f6b305273364351",
-  "public:assets/images/animals.webp": "827c578a7860554636"
+  "src:content/firefly-posts/guide/cover.avif": "c8bca9dde6d2babfb5"
 }

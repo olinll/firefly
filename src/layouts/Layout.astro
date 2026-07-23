@@ -3,7 +3,7 @@ import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
-import CopyMessage from "@components/common/CopyMessage.svelte"; //复制内容提示组件
+import CopyMessage from "@components/common/CopyMessage.svelte"; // 复制内容提示组件
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
@@ -14,6 +14,7 @@ import WelcomeToast from "@components/widget/WelcomeToast.astro";
 import {
 	analyticsConfig,
 	backgroundWallpaper,
+	displaySettingsConfig,
 	expressiveCodeConfig,
 	profileConfig,
 	siteConfig,
@@ -171,6 +172,8 @@ const siteLang = lang.replace("_", "-");
     }
 
     <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
+    <!-- 注：静态图片（ImageWrapper 组件、Markdown 正文图）已在构建期加好 referrerpolicy；
+         此脚本仅作为运行时兜底，处理动态注入的图片（解密内容、第三方评论/统计部件等）。 -->
     {siteConfig.imageOptimization?.noReferrerDomains &&
      siteConfig.imageOptimization.noReferrerDomains.length > 0 && (
       <script
@@ -209,10 +212,10 @@ const siteLang = lang.replace("_", "-");
             }
           }
 
-          // 立即处理页面上的所有图片
+          // 兜底扫描一次当前页面（构建期已处理的图片会因已有属性而快速跳过）
           document.querySelectorAll('img').forEach(processImage);
 
-          // 使用 MutationObserver 监听动态加载的图片
+          // 使用 MutationObserver 监听动态加载/注入的图片
           const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
               mutation.addedNodes.forEach(function(node) {
@@ -244,7 +247,7 @@ const siteLang = lang.replace("_", "-");
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
         defaultWallpaperMode: backgroundWallpaper.mode,
         isWallpaperSwitchable:
-          backgroundWallpaper.switchable ?? true,
+          displaySettingsConfig.wallpaperModeSwitchable,
         darkTheme: expressiveCodeConfig.darkTheme,
         lightTheme: expressiveCodeConfig.lightTheme,
         baseUrl: import.meta.env.BASE_URL,
@@ -562,27 +565,41 @@ const siteLang = lang.replace("_", "-");
         "lg:is-home": isHomePageCheck,
         "enable-banner": enableBanner,
         "sticky-navbar": siteConfig.navbar.stickyNavbar ?? false,
-        "enable-card-border": siteConfig.card?.border,
-        "card-follow-theme-hue": siteConfig.card?.followTheme,
       },
     ]}
   >
 
     <div id="progress-bar"></div>
 
+    {/* 卡片样式：根据 localStorage 覆盖默认配置 */}
+    <script is:inline define:vars={{
+      defaultBorder: siteConfig.card?.border ?? false,
+      defaultFollowTheme: siteConfig.card?.followTheme ?? false,
+    }}>
+      (function() {
+        var stored = localStorage.getItem("cardBorderEnabled");
+        var border = stored !== null ? stored === "true" : defaultBorder;
+        if (border) document.documentElement.classList.add("enable-card-border");
+        else document.documentElement.classList.remove("enable-card-border");
+
+        stored = localStorage.getItem("cardFollowThemeEnabled");
+        var follow = stored !== null ? stored === "true" : defaultFollowTheme;
+        if (follow) document.body.classList.add("card-follow-theme-hue");
+        else document.body.classList.remove("card-follow-theme-hue");
+      })();
+    </script>
+
     <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
     {shouldShowTopHighlight && <div class="top-gradient-highlight" />}
     <ConfigCarrier />
     <MusicManager />
-    <CopyMessage client:load />
     <slot />
 
 
 
     <!-- Sakura Effect -->
     <SakuraEffect />
-
-    <!-- Welcome Toast -->
+    <CopyMessage client:load />
     <WelcomeToast client:load />
 
     <!-- Fancybox Manager -->
@@ -750,37 +767,6 @@ const siteLang = lang.replace("_", "-");
   // 	}
   // })();
 
-  /* TODO This is a temporary solution for style flicker issue when the transition is activated */
-  /* issue link: https://github.com/withastro/astro/issues/8711, the solution get from here too */
-  /* update: fixed in Astro 3.2.4 */
-  /*
-function disableAnimation() {
-	const css = document.createElement('style')
-	css.appendChild(
-		document.createTextNode(
-			`*{
-              -webkit-transition:none!important;
-              -moz-transition:none!important;
-              -o-transition:none!important;
-              -ms-transition:none!important;
-              transition:none!important
-              }`
-		)
-	)
-	document.head.appendChild(css)
-
-	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
-	}
-}
-*/
-
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
   const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
 
@@ -919,17 +905,6 @@ function disableAnimation() {
     });
 
     // TODO: temp solution to change the height of the banner
-    /*
-	window.swup.hooks.on('animation:out:start', () => {
-		const path = window.location.pathname
-		const body = document.querySelector('body')
-		if (path[path.length - 1] === '/' && !body.classList.contains('is-home')) {
-			body.classList.add('is-home')
-		} else if (path[path.length - 1] !== '/' && body.classList.contains('is-home')) {
-			body.classList.remove('is-home')
-		}
-	})
-*/
     window.swup.hooks.on("link:click", (_visit: any, { el }: { el: HTMLAnchorElement }) => {
       // Remove the delay for the first time page load
       document.documentElement.style.setProperty("--content-delay", "0ms");

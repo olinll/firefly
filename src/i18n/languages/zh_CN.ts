@@ -255,9 +255,9 @@ export const zh_CN: Translation = {
 
 	// 访问量统计
 	[Key.pageViews]: "浏览量",
-	[Key.pageVisitors]: "浏览人数",
 	[Key.pageViewsLoading]: "加载中...",
 	[Key.pageViewsError]: "统计不可用",
+	[Key.pageVisitors]: "访客数",
 
 	// 置顶
 	[Key.pinned]: "置顶",
@@ -292,6 +292,16 @@ export const zh_CN: Translation = {
 	[Key.overlayOpacity]: "壁纸透明度",
 	[Key.overlayBlur]: "背景模糊度",
 	[Key.overlayCardOpacity]: "卡片透明度",
+
+	// 设置面板标签
+	[Key.settingsTabAppearance]: "外观",
+	[Key.settingsTabWallpaper]: "壁纸",
+	[Key.settingsTabEffects]: "特效",
+
+	// 卡片样式
+	[Key.cardSettings]: "卡片样式",
+	[Key.cardBorder]: "卡片边框和阴影",
+	[Key.cardFollowTheme]: "卡片跟随主题色",
 
 	// 文章布局
 	[Key.postListLayout]: "文章布局",

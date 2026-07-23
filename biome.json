@@ -13,7 +13,6 @@
       "!**/src/public/**/*",
       "!**/dist/**/*",
       "!**/node_modules/**/*",
-      "!**/src/constants/icons.ts",
       "!**/src/constants/lqips.json",
       "!**/src/content/.obsidian/**/*",
       "!**/src/config/FooterConfig.html"

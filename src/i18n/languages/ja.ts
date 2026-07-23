@@ -262,9 +262,9 @@ export const ja: Translation = {
 
 	// ページビュー統計
 	[Key.pageViews]: "閲覧数",
-	[Key.pageVisitors]: "訪問者数",
 	[Key.pageViewsLoading]: "読み込み中...",
 	[Key.pageViewsError]: "統計利用不可",
+	[Key.pageVisitors]: "訪問者数",
 
 	// ピン留め
 	[Key.pinned]: "ピン留め",
@@ -299,6 +299,16 @@ export const ja: Translation = {
 	[Key.overlayOpacity]: "壁紙の透明度",
 	[Key.overlayBlur]: "背景ぼかし",
 	[Key.overlayCardOpacity]: "カード透明度",
+
+	// 設定パネルタブ
+	[Key.settingsTabAppearance]: "外観",
+	[Key.settingsTabWallpaper]: "壁紙",
+	[Key.settingsTabEffects]: "エフェクト",
+
+	// カードスタイル
+	[Key.cardSettings]: "カードスタイル",
+	[Key.cardBorder]: "カードのボーダーと影",
+	[Key.cardFollowTheme]: "カードのテーマカラー追随",
 
 	// 投稿リストレイアウト
 	[Key.postListLayout]: "投稿リストレイアウト",

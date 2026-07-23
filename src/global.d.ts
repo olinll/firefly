@@ -12,7 +12,6 @@ declare global {
 		swup: any;
 		spineModelInitialized?: boolean;
 		floatingTOCListenersInitialized?: boolean;
-		__closeWelcomeToast?: () => void;
 		// biome-ignore lint/suspicious/noExplicitAny: External library
 		spinePlayerInstance?: any;
 		pagefind: {
@@ -70,6 +69,8 @@ declare global {
 		sakuraManager?: SakuraManagerLike;
 		/** 樱花特效初始化守卫,确保只初始化一次(Swup 切页重跑脚本时复用) */
 		sakuraInitialized?: boolean;
+		/** 关闭欢迎提示 Toast */
+		__closeWelcomeToast?: () => void;
 	}
 
 	interface MediaQueryList {

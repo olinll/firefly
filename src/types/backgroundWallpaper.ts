@@ -1,6 +1,6 @@
 export type BackgroundWallpaperConfig = {
 	mode: "banner" | "fullscreen" | "overlay" | "none"; // 壁纸模式：banner横幅模式、fullscreen全屏壁纸、overlay全屏透明覆盖模式或none纯色背景
-	switchable?: boolean; // 是否允许用户通过导航栏切换壁纸模式，默认true
+	switchable?: boolean; // 是否允许用户通过导航栏切换壁纸模式
 	playerEnable?: boolean; // 是否启用背景视频播放，默认false
 	src:
 		| string
@@ -90,10 +90,10 @@ export type BackgroundWallpaperConfig = {
 		switchable?:
 			| boolean
 			| {
-					opacity?: boolean; // 是否允许用户在控制面板调整壁纸透明度
-					blur?: boolean; // 是否允许用户在控制面板调整背景模糊度
-					cardOpacity?: boolean; // 是否允许用户在控制面板调整卡片透明度
-			  }; // 透明模式参数是否可在控制面板调整，支持统一开关或分项开关
+					opacity?: boolean; // 壁纸透明度调节开关
+					blur?: boolean; // 背景模糊度调节开关
+					cardOpacity?: boolean; // 卡片透明度调节开关
+			  }; // 是否允许用户通过控制面板调整全屏透明模式参数
 		zIndex?: number; // 层级，确保壁纸在合适的层级显示
 		opacity?: number; // 壁纸透明度，0-1之间
 		blur?: number; // 背景模糊程度，单位px

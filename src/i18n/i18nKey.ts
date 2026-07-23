@@ -255,9 +255,9 @@ enum I18nKey {
 
 	// 访问量统计
 	pageViews = "pageViews",
-	pageVisitors = "pageVisitors",
 	pageViewsLoading = "pageViewsLoading",
 	pageViewsError = "pageViewsError",
+	pageVisitors = "pageVisitors",
 
 	// 置顶
 	pinned = "pinned",
@@ -292,6 +292,16 @@ enum I18nKey {
 	overlayOpacity = "overlayOpacity",
 	overlayBlur = "overlayBlur",
 	overlayCardOpacity = "overlayCardOpacity",
+
+	// 设置面板标签
+	settingsTabAppearance = "settingsTabAppearance",
+	settingsTabWallpaper = "settingsTabWallpaper",
+	settingsTabEffects = "settingsTabEffects",
+
+	// 卡片样式
+	cardSettings = "cardSettings",
+	cardBorder = "cardBorder",
+	cardFollowTheme = "cardFollowTheme",
 
 	// 文章布局
 	postListLayout = "postListLayout",
