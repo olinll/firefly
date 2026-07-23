@@ -32,7 +32,7 @@ export const dynamicConfig: DynamicConfig = {
 	// Memos 记得配置 CORS，否则可能会出现跨域问题
 	memos: {
 		// 是否启用 Memos 数据源
-		enable: true,
+		enable: false,
 
 		// Memos 实例地址
 		apiUrl: "https://note.olinl.com",
