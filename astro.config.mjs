@@ -18,6 +18,7 @@ import cloudflare from "@astrojs/cloudflare";
 import mdx from "@astrojs/mdx";
 import { pluginCollapsible } from "expressive-code-collapsible"; /* Collapsible */
 import { pluginLanguageBadge } from "expressive-code-language-badge"; /* Language Badge */
+import { pluginLanguageLogo } from "ec-lang-logo"; /* Language Logo */
 import rehypeCallouts from "rehype-callouts";
 import rehypeSlug from "rehype-slug";
 import remarkAdmonitionToBlockquoteCallout from "remark-admonition-to-blockquote-callout";
@@ -143,6 +144,15 @@ export default defineConfig({
 				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
 				...(expressiveCodeConfig.pluginLanguageBadge?.enable === true
 					? [pluginLanguageBadge()]
+					: []),
+				// pluginLanguageLogo 配置 - 从expressiveCodeConfig读取设置
+				...(expressiveCodeConfig.pluginLanguageLogo?.enable === true
+					? [
+							pluginLanguageLogo({
+								color: expressiveCodeConfig.pluginLanguageLogo.color ?? "mono",
+								excludedLangs: expressiveCodeConfig.pluginLanguageLogo.excludedLangs ?? [],
+							}),
+						]
 					: []),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
@@ -331,4 +341,3 @@ export default defineConfig({
 		},
 	},
 });
-

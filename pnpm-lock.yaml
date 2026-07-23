@@ -68,6 +68,9 @@ importers:
       '@iconify/svelte':
         specifier: ^5.2.2
         version: 5.2.2(svelte@5.56.4)
+      '@iconify/types':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@iconify/utils':
         specifier: ^3.1.4
         version: 3.1.4
@@ -104,6 +107,9 @@ importers:
       dayjs:
         specifier: ^1.11.21
         version: 1.11.21
+      ec-lang-logo:
+        specifier: ^1.0.5
+        version: 1.0.5(@expressive-code/core@0.44.0)
       expressive-code-collapsible:
         specifier: ^0.1.0
         version: 0.1.0(@expressive-code/core@0.44.0)
@@ -3062,6 +3068,11 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
+  ec-lang-logo@1.0.5:
+    resolution: {integrity: sha512-sVtaIyeaaefRp+GzYqPbyjIILNgW/QV5O3hWtrVoluwhT+2frV9sXLmPRb32bKQH6lkkgooEypfGGdYKmIK1KQ==}
+    peerDependencies:
+      '@expressive-code/core': ^0.41.3
+
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
     engines: {node: '>=0.10.0'}
@@ -5145,6 +5156,10 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
+
+  simple-icons@16.27.0:
+    resolution: {integrity: sha512-Rk2dCRVCPHnla9/mHmztJOlbkfncPDUMSOPozQO3+c+vr6Uwy9jhNHeuxxvNZgbF9ZwpoT1BCu1LNB4Q07VmZQ==}
+    engines: {node: '>=0.12.18'}
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
@@ -9003,6 +9018,11 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
+  ec-lang-logo@1.0.5(@expressive-code/core@0.44.0):
+    dependencies:
+      '@expressive-code/core': 0.44.0
+      simple-icons: 16.27.0
+
   ejs@3.1.10:
     dependencies:
       jake: 10.9.4
@@ -11891,6 +11911,8 @@ snapshots:
       side-channel-weakmap: 1.0.2
 
   signal-exit@4.1.0: {}
+
+  simple-icons@16.27.0: {}
 
   sisteransi@1.0.5: {}
 
